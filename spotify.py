@@ -1,10 +1,10 @@
-"""Gets Spotify authorization credentials."""
+"""Handles Spotify authorization, access tokens, and API requests."""
 
 import os
 import base64
+import requests
 
 from flask import request
-import requests
 
 SPOTIFY_AUTHORIZATION_URL='https://accounts.spotify.com/authorize'
 SPOTIFY_REDIRECT_URI='http://localhost:5000/spotify-auth'
@@ -14,7 +14,7 @@ SPOTIFY_TOKEN_ENDPOINT='https://accounts.spotify.com/api/token'
 
 
 def get_auth_url():
-    """Generates Spotify authorization URL."""
+    """Generate Spotify authorization URL."""
 
     # need auth url to login and generate authorization code
     # specify credentials so spotify api authorizes the get request
@@ -31,7 +31,7 @@ def get_auth_url():
 
 
 def get_auth_token():
-    """Exchange Spotify authorization code with access token."""
+    """Exchange Spotify authorization code for access token via POST request."""
 
     # gets the value of 'code' from the query string in the auth url
     auth_code = request.args.get('code')
@@ -52,19 +52,16 @@ def get_auth_token():
     print(client_encoded_str)
     print('\n\n\n')
 
-
     headers = {"Authorization": f"Basic {client_encoded_str.decode('ascii')}"}
     print('THIS IS THE HEADER')
     print(headers)
     print('\n\n\n')
-
 
     # http://flask.pocoo.org/docs/1.0/reqcontext/
     # http://docs.python-requests.org/en/master/user/quickstart/
     # https://www.pluralsight.com/guides/web-scraping-with-request-python
     # need to submit auth code to spotify's token endpoint to get access token in return
     # requests.post takes the endpoint, the request parameters as a dictionary, and header
-
     response = requests.post(SPOTIFY_TOKEN_ENDPOINT, data=request_params, headers=headers)
 
     # need to convert to json so i can access info more easily
@@ -93,3 +90,14 @@ def get_top_artists(access_token):
     response = requests.get(url, headers=headers)
 
     return response.json()
+
+
+def format_artist_data(response):
+    """Format top artist JSON data as a list of tuples: index and artist."""
+
+    numbered_list = []
+
+    for index, item in enumerate(response['items'], 1):
+        numbered_list.append((index, item['name']))
+
+    return numbered_list

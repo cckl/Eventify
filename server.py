@@ -1,9 +1,8 @@
 import os
 from flask import Flask, flash, render_template, redirect, session
-# from flask_debugtoolbar import DebugToolbarExtension
+from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import StrictUndefined
 
-# import testing
 import spotify
 
 app = Flask(__name__)
@@ -13,7 +12,7 @@ app.jinja_env.undefined = StrictUndefined
 
 @app.route('/')
 def show_homepage():
-    """Displays homepage."""
+    """Display homepage."""
 
     spotify_auth_url = spotify.get_auth_url()
 
@@ -22,12 +21,12 @@ def show_homepage():
 
 @app.route('/spotify-auth')
 def authorize_spotify():
+    """Spotify authorization callback."""
 
     response = spotify.get_auth_token()
     print('THIS IS THE RESPONSE')
     print(response)
     print('\n\n\n')
-
 
     flash("Succesfully logged into Spotify!")
     session['spotify_token'] = response['access_token']
@@ -35,19 +34,20 @@ def authorize_spotify():
     print(session)
     print('\n\n\n')
 
-
     return redirect("/top-40")
 
 
 @app.route('/top-40')
 def show_top_40():
+    """Display user's top 40 Spotify artists."""
 
     access_token = session['spotify_token']
+    response = spotify.get_top_artists(access_token)
+    formatted_res = spotify.format_artist_data(response)
 
-    top_artists = spotify.get_top_artists(access_token)
-
-    return render_template("test.html", artists=top_artists)
-
+    # res['items'] is a list of the artists, with various attributes (name, popularity, etc) as keys
+    # loop over list and add numbers using enumerate()
+    return render_template("top-40.html", artists=formatted_res)
 
 
 if __name__ == "__main__":
