@@ -1,0 +1,8 @@
+env/
+credentials.sh
+ignore/
+*.pyc
+__pycache__
+.cache-22uhxv5duq6zgcspb4gkaw6di
+.cache-2uhxv5duq6zgcspb4gkaw6di
+.cache-cckl
