@@ -14,9 +14,30 @@ app.jinja_env.undefined = StrictUndefined
 def show_homepage():
     """Display homepage."""
 
+    return render_template("homepage.html")
+
+
+@app.route('/login')
+def show_login():
+    """Display user login page."""
+
+    return render_template("login.html")
+
+
+@app.route('/register')
+def show_registration():
+    """Display user registration page."""
+
+    return render_template("register.html")
+
+
+@app.route('/get-top-40')
+def get_top_40():
+    """Display page to login to Spotify."""
+
     spotify_auth_url = spotify.get_auth_url()
 
-    return render_template("homepage.html",  spotify_auth_url=spotify_auth_url)
+    return render_template("get-top-40.html",  spotify_auth_url=spotify_auth_url)
 
 
 @app.route('/spotify-auth')

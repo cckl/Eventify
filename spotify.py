@@ -76,7 +76,7 @@ def get_top_artists(access_token):
 
     # necessary query params for playlist endpoint
     query_params = {
-        'time_range': 'medium_term',
+        'time_range': 'long_term',
         'limit': '40'
     }
 

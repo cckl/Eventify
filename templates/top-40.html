@@ -7,8 +7,9 @@
   <body>
     <img src="{{ user['images'][0]['url'] }}" alt="">
     Hello, <a href="{{ user['external_urls']['spotify'] }}">{{ user['display_name']}}</a>!
-    <br>
-    <br>
+    <br><br>
+    <a href="/logout">logout</a>
+    <br><br>
     <h2>Your top 40 Spotify artists in the last 6 months:</h2>
 
     <!-- unpack artist data -->
