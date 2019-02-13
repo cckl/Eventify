@@ -42,12 +42,12 @@ def show_top_40():
     """Display user's top 40 Spotify artists."""
 
     access_token = session['spotify_token']
+
+    # get top artists
     response = spotify.get_top_artists(access_token)
     formatted_res = spotify.format_artist_data(response)
 
-    # res['items'] is a list of the artists, with various attributes (name, popularity, etc) as keys
-    # loop over list and add numbers using enumerate()
-    return render_template("top-40.html", artists=formatted_res)
+    return render_template("top-40.html", artists=formatted_res, all_data=response)
 
 
 if __name__ == "__main__":

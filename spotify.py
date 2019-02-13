@@ -93,11 +93,14 @@ def get_top_artists(access_token):
 
 
 def format_artist_data(response):
-    """Format top artist JSON data as a list of tuples: index and artist."""
+    """Format top artist JSON data as a list of tuples: index, artist, url, and image."""
 
     numbered_list = []
 
     for index, item in enumerate(response['items'], 1):
-        numbered_list.append((index, item['name']))
+        numbered_list.append((index,
+                            item['name'],
+                            item['external_urls']['spotify'],
+                            item['images'][2]['url']))
 
     return numbered_list

@@ -5,10 +5,16 @@
     <title></title>
   </head>
   <body>
-    <h2>Congrats you arrived at the artist page.</h2>
-    {% for index, artist in artists %}
-      <h4>{{ index }}. {{ artist }}</h4>
+    <h2>Your top 40 Spotify artists:</h2>
+    <!-- unpack artist data -->
+    {% for index, artist, url, img in artists %}
+        {{ index }}. <a href="{{ url}}">{{ artist }}</a>
+        <img src="{{ img }}" style="padding: 0.5em 1em" alt="Spotify profile image of {{ artist }}">
     {% endfor %}
+
+    <br>
+    <br>
+    {{all_data}}
 
   </body>
 </html>
