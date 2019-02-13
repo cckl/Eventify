@@ -47,7 +47,10 @@ def show_top_40():
     response = spotify.get_top_artists(access_token)
     formatted_res = spotify.format_artist_data(response)
 
-    return render_template("top-40.html", artists=formatted_res, all_data=response)
+    # get user get_user_profile
+    user = spotify.get_user_profile(access_token)
+
+    return render_template("top-40.html", artists=formatted_res, all_data=response, user=user)
 
 
 if __name__ == "__main__":

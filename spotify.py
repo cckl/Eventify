@@ -104,3 +104,15 @@ def format_artist_data(response):
                             item['images'][2]['url']))
 
     return numbered_list
+
+
+def get_user_profile(access_token):
+    """Get Spotify profile information about the current user."""
+
+    SPOTIFY_USER_ENDPOINT = 'https://api.spotify.com/v1/me'
+
+    headers = {"Authorization": f"Bearer {access_token}"}
+
+    response = requests.get(SPOTIFY_USER_ENDPOINT, headers=headers)
+
+    return response.json()
