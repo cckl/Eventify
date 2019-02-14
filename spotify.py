@@ -30,11 +30,13 @@ def get_auth_url():
     return auth_url
 
 
-def get_auth_token():
+def get_access_token():
+    # try passing in the request object as a parameter, instead of having it in line 38
     """Exchange Spotify authorization code for access token via POST request."""
 
     # gets the value of 'code' from the query string in the auth url
     auth_code = request.args.get('code')
+    print(auth_code)
 
     request_params = {
         'grant_type': 'authorization_code',
@@ -48,11 +50,13 @@ def get_auth_token():
     # the header, as specified in the docs, needs to be a base64 encoded string that has
     # the client ID and secret key. can use base64 to encode and decode
     client_encoded_str = base64.b64encode(f"{SPOTIFY_CLIENT_ID}:{SPOTIFY_CLIENT_SECRET}".encode('ascii'))
+
     print('THIS IS ENCODED STRING')
     print(client_encoded_str)
     print('\n\n\n')
 
     headers = {"Authorization": f"Basic {client_encoded_str.decode('ascii')}"}
+    
     print('THIS IS THE HEADER')
     print(headers)
     print('\n\n\n')
@@ -76,7 +80,7 @@ def get_top_artists(access_token):
 
     # necessary query params for playlist endpoint
     query_params = {
-        'time_range': 'long_term',
+        'time_range': 'medium_term',
         'limit': '40'
     }
 

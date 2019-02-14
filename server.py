@@ -2,11 +2,13 @@ import os
 from flask import Flask, flash, render_template, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import StrictUndefined
+# should import request from flask here, and then pass it in to the spotify.py functions
+# pass the context, not import
 
 import spotify
 
 app = Flask(__name__)
-app.secret_key = 'demuja'
+app.secret_key = os.environ['FLASK_APP_KEY']
 app.jinja_env.undefined = StrictUndefined
 
 
@@ -22,6 +24,16 @@ def show_login():
     """Display user login page."""
 
     return render_template("login.html")
+
+
+@app.route('/logout')
+def logout():
+    """Logout."""
+
+    session.clear()
+    print(session)
+
+    return redirect("/")
 
 
 @app.route('/register')
@@ -44,16 +56,28 @@ def get_top_40():
 def authorize_spotify():
     """Spotify authorization callback."""
 
-    response = spotify.get_auth_token()
+    response = spotify.get_access_token()
+
+    # if 'spotify_token' in session:
+    #     flash('Already logged in to Spotify!')
+    #     return redirect("/top-40")
+    # else:
+    #     flash("Succesfully logged into Spotify!")
+    #     session['spotify_token'] = response['access_token']
+    #     return redirect("/top-40")
+
     print('THIS IS THE RESPONSE')
     print(response)
+    print('\n\n\n')
+    print('THIS IS THE SESSION')
+    print(session)
     print('\n\n\n')
 
     flash("Succesfully logged into Spotify!")
     session['spotify_token'] = response['access_token']
-    print('THIS IS THE SESSION')
+
+    print('OUR SESSION')
     print(session)
-    print('\n\n\n')
 
     return redirect("/top-40")
 
@@ -70,6 +94,9 @@ def show_top_40():
 
     # get user get_user_profile
     user = spotify.get_user_profile(access_token)
+
+    print('OUR SESSION')
+    print(session)
 
     return render_template("top-40.html", artists=formatted_res, all_data=response, user=user)
 

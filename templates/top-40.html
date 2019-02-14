@@ -1,27 +1,25 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
-    <img src="{{ user['images'][0]['url'] }}" alt="">
-    Hello, <a href="{{ user['external_urls']['spotify'] }}">{{ user['display_name']}}</a>!
-    <br><br>
-    <a href="/logout">logout</a>
-    <br><br>
-    <h2>Your top 40 Spotify artists in the last 6 months:</h2>
+{% extends 'base.html' %}
 
-    <!-- unpack artist data -->
-    {% for index, artist, url, img in artists %}
-        {{ index }}. <a href="{{ url}}">{{ artist }}</a>
-        <img src="{{ img }}" style="padding: 0.5em 1em" alt="Spotify profile image of {{ artist }}">
-    {% endfor %}
+{% block title %} Here's your Spotify Top 40 {% endblock%}
 
-    <br><br>
-    {{ user }}
-    <br><br>
-    {{all_data}}
+{% block content %}
 
-  </body>
-</html>
+  <img src="{{ user['images'][0]['url'] }}" alt="image for user['display_name']">
+  Hello, <a href="{{ user['external_urls']['spotify'] }}">{{ user['display_name']}}</a>!
+  <br><br>
+  <a href="/logout">logout</a>
+  <br><br>
+  <h2>Your top 40 Spotify artists in the last 6 months:</h2>
+
+  <!-- unpack artist data -->
+  {% for index, artist, url, img in artists %}
+    {{ index }}. <a href="{{ url}}">{{ artist }}</a>
+    <img src="{{ img }}" style="padding: 0.5em 1em" alt="Spotify profile image of {{ artist }}">
+  {% endfor %}
+
+  <br><br>
+  {{ user }}
+  <br><br>
+  {{all_data}}
+
+{% endblock %}

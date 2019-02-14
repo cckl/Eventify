@@ -19,10 +19,8 @@ class User(db.Model):
     img = db.Column(db.String(150))
 
     # https://www.michaelcho.me/article/many-to-many-relationships-in-sqlalchemy-models-flask
-    # create relationship with Artist class and association table of users' top artists
-
-    # don't need the following line if i have a backref in the artist class
-    # artists = db.relationship('Artist', secondary='users_top_artists')
+    artists = db.relationship('Artist', secondary='users_artists_link', back_populates='user')
+    events = db.relationship('Event', secondary='users_events_link', back_populates='user')
 
     def __repr__(self):
         """Provide representation of class attributes when printed."""
@@ -36,12 +34,11 @@ class Artist(db.Model):
     __tablename__ = 'artists'
 
     artist_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    artist_name = db.Column(db.String(75), nullable=False)
+    name = db.Column(db.String(75), nullable=False)
     spotify_url = db.Column(db.String(150), nullable=False)
     img = db.Column(db.String(150), nullable=False)
 
-    # use backref to encapsulate the relationships
-    users = db.relationship('User', secondary='users_top_artists', backref='artists')
+    users = db.relationship('User', secondary='users_artists_link', back_populates='artist')
 
     def __repr__(self):
         """Provide representation of class attributes when printed."""
@@ -49,22 +46,20 @@ class Artist(db.Model):
         return f"<Artist: artist_id={self.artist_id}, name={self.artist_name}, spotify_url={self.spotify_url}, img_src={self.img}>"
 
 
-class UserTopArtist(db.Model):
+class UserArtistLink(db.Model):
     """Users' top artists from Spotify."""
 
     # https://www.michaelcho.me/article/many-to-many-relationships-in-sqlalchemy-models-flask
     # https://www.pythoncentral.io/sqlalchemy-association-tables/
     # creating association table
 
-    __tablename__ = 'users_top_artists'
+    __tablename__ = 'users_artists_link'
 
-    query_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    users_artists_link_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     artist_id = db.Column(db.Integer, db.ForeignKey('artists.artist_id'))
-    timestamp = db.Column(db.DateTime(timezone=True))
+    created_at = db.Column(db.DateTime(timezone=True))
 
-
-    # can eliminate the need for these with a backref in artists
     # user = db.relationship('User', backref='users_top_artists')
     # artist = db.relationship('Artist', backref='users_top_artists')
 
@@ -80,12 +75,12 @@ class Event(db.Model):
     __tablename__ = 'events'
 
     event_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    event_name = db.Column(db.String(250), nullable=False)
-    event_date = db.Column(db.DateTime(timezone=True))
-    city = db.Column(db.String(50))
+    name = db.Column(db.String(250), nullable=False)
+    date = db.Column(db.DateTime(timezone=True))
+    starts_at = db.Column(db.String(50))
     eventbrite_url = db.Column(db.String(250))
 
-    user = db.relationship('User', secondary="users_liked_events", backref='events')
+    users = db.relationship('User', secondary="users_events_link", back_populates='event')
 
     def __repr__(self):
         """Provide representation of class attributes when printed."""
@@ -93,12 +88,12 @@ class Event(db.Model):
         return f"<Event: event_id={self.event_id},  event_name={self.event_name}, date={self.event_date}, city={self.city}, url={self.eventbrite_url}>"
 
 
-class UserLikedEvent(db.Model):
+class UserEventLink(db.Model):
     """Users' liked events from Eventbrite."""
 
-    __tablename__ = 'users_liked_events'
+    __tablename__ = 'users_events_link'
 
-    like_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    users_events_link_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     event_id = db.Column(db.Integer, db.ForeignKey('events.event_id'))
 
