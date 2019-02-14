@@ -1,11 +1,12 @@
 import os
-from flask import Flask, flash, render_template, redirect, session
+from flask import Flask, flash, render_template, redirect, request, session
 from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import StrictUndefined
 # should import request from flask here, and then pass it in to the spotify.py functions
 # pass the context, not import
 
 import spotify
+
 
 app = Flask(__name__)
 app.secret_key = os.environ['FLASK_APP_KEY']
@@ -56,7 +57,7 @@ def get_top_40():
 def authorize_spotify():
     """Spotify authorization callback."""
 
-    response = spotify.get_access_token()
+    response = spotify.get_access_token(request)
 
     # if 'spotify_token' in session:
     #     flash('Already logged in to Spotify!')

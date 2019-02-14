@@ -4,13 +4,14 @@ import os
 import base64
 import requests
 
-from flask import request
 
 SPOTIFY_AUTHORIZATION_URL='https://accounts.spotify.com/authorize'
 SPOTIFY_REDIRECT_URI='http://localhost:5000/spotify-auth'
 SPOTIFY_CLIENT_ID=os.environ['SPOTIFY_CLIENT_ID']
 SPOTIFY_CLIENT_SECRET=os.environ['SPOTIFY_CLIENT_SECRET']
 SPOTIFY_TOKEN_ENDPOINT='https://accounts.spotify.com/api/token'
+SPOTIFY_USER_ENDPOINT = 'https://api.spotify.com/v1/me'
+SPOTIFY_TOP_ARTISTS_ENDPOINT = 'https://api.spotify.com/v1/me/top/artists'
 
 
 def get_auth_url():
@@ -30,8 +31,7 @@ def get_auth_url():
     return auth_url
 
 
-def get_access_token():
-    # try passing in the request object as a parameter, instead of having it in line 38
+def get_access_token(request):
     """Exchange Spotify authorization code for access token via POST request."""
 
     # gets the value of 'code' from the query string in the auth url
@@ -56,7 +56,7 @@ def get_access_token():
     print('\n\n\n')
 
     headers = {"Authorization": f"Basic {client_encoded_str.decode('ascii')}"}
-    
+
     print('THIS IS THE HEADER')
     print(headers)
     print('\n\n\n')
@@ -76,8 +76,6 @@ def get_top_artists(access_token):
     """Get a user's top 40 artists."""
 
     # https://www.dataquest.io/blog/python-api-tutorial/
-    SPOTIFY_TOP_ARTISTS_ENDPOINT = 'https://api.spotify.com/v1/me/top/artists'
-
     # necessary query params for playlist endpoint
     query_params = {
         'time_range': 'medium_term',
@@ -112,8 +110,6 @@ def format_artist_data(response):
 
 def get_user_profile(access_token):
     """Get Spotify profile information about the current user."""
-
-    SPOTIFY_USER_ENDPOINT = 'https://api.spotify.com/v1/me'
 
     headers = {"Authorization": f"Bearer {access_token}"}
 
