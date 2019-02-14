@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
 #####################################################################
 # Model definitions
 
@@ -19,8 +20,8 @@ class User(db.Model):
     img = db.Column(db.String(150))
 
     # https://www.michaelcho.me/article/many-to-many-relationships-in-sqlalchemy-models-flask
-    artists = db.relationship('Artist', secondary='users_artists_link', back_populates='user')
-    events = db.relationship('Event', secondary='users_events_link', back_populates='user')
+    artists = db.relationship('Artist', secondary='users_artists_link')
+    events = db.relationship('Event', secondary='users_events_link')
 
     def __repr__(self):
         """Provide representation of class attributes when printed."""
@@ -36,14 +37,14 @@ class Artist(db.Model):
     artist_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(75), nullable=False)
     spotify_url = db.Column(db.String(150), nullable=False)
-    img = db.Column(db.String(150), nullable=False)
+    img = db.Column(db.String(150))
 
-    users = db.relationship('User', secondary='users_artists_link', back_populates='artist')
+    users = db.relationship('User', secondary='users_artists_link')
 
     def __repr__(self):
         """Provide representation of class attributes when printed."""
 
-        return f"<Artist: artist_id={self.artist_id}, name={self.artist_name}, spotify_url={self.spotify_url}, img_src={self.img}>"
+        return f"<Artist: artist_id={self.artist_id}, name={self.name}, spotify_url={self.spotify_url}, img_src={self.img}>"
 
 
 class UserArtistLink(db.Model):
@@ -51,7 +52,6 @@ class UserArtistLink(db.Model):
 
     # https://www.michaelcho.me/article/many-to-many-relationships-in-sqlalchemy-models-flask
     # https://www.pythoncentral.io/sqlalchemy-association-tables/
-    # creating association table
 
     __tablename__ = 'users_artists_link'
 
@@ -60,13 +60,13 @@ class UserArtistLink(db.Model):
     artist_id = db.Column(db.Integer, db.ForeignKey('artists.artist_id'))
     created_at = db.Column(db.DateTime(timezone=True))
 
-    # user = db.relationship('User', backref='users_top_artists')
-    # artist = db.relationship('Artist', backref='users_top_artists')
+    users = db.relationship('User', backref='users_artists_link')
+    artists = db.relationship('Artist', backref='users_artists_link')
 
     def __repr__(self):
         """Provide representation of class attributes when printed."""
 
-        return f"<UserTopArtist: query_id={self.query_id},  user_id={self.user_id}, artist_id={self.artist_id}>"
+        return f"<UserTopArtist: query_id={self.users_artists_link_id},  user_id={self.user_id}, artist_id={self.artist_id}>"
 
 
 class Event(db.Model):
@@ -76,16 +76,16 @@ class Event(db.Model):
 
     event_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
-    date = db.Column(db.DateTime(timezone=True))
-    starts_at = db.Column(db.String(50))
+    starts_at = db.Column(db.DateTime(timezone=True))
+    location = db.Column(db.String(50))
     eventbrite_url = db.Column(db.String(250))
 
-    users = db.relationship('User', secondary="users_events_link", back_populates='event')
+    users = db.relationship('User', secondary="users_events_link")
 
     def __repr__(self):
         """Provide representation of class attributes when printed."""
 
-        return f"<Event: event_id={self.event_id},  event_name={self.event_name}, date={self.event_date}, city={self.city}, url={self.eventbrite_url}>"
+        return f"<Event: event_id={self.event_id},  event_name={self.name}, date={self.starts_at}, city={self.location}, url={self.eventbrite_url}>"
 
 
 class UserEventLink(db.Model):
@@ -97,14 +97,13 @@ class UserEventLink(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     event_id = db.Column(db.Integer, db.ForeignKey('events.event_id'))
 
-    # can eliminate the need for these with a backref in Event
-    # user = db.relationship('User', backref='users_liked_events')
-    # event = db.relationship('Event', backref='users_liked_events')
+    users = db.relationship('User', backref='users_events_link')
+    events = db.relationship('Event', backref='users_events_link')
 
     def __repr__(self):
         """Provide representation of class attributes when printed."""
 
-        return f"<UserLikedEvent: like_id={self.like_id},  user_id={self.user_id}, event_id={self.event_id}>"
+        return f"<UserLikedEvent: like_id={self.users_events_link_id},  user_id={self.user_id}, event_id={self.event_id}>"
 
 
 #####################################################################
