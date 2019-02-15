@@ -46,7 +46,27 @@ def show_login():
 def process_login():
     """Process user login."""
 
-    return render_template("login.html")
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    # checks for existing user with matching credentials
+    try:
+        user = User.query.filter_by(username=username).one()
+    except:
+        flash('No user with that username was found. Please try again or register an account.')
+        return render_template("login.html")
+
+    user_password = User
+
+    if password == user.password:
+        session['user'] = username
+        flash('Successfully logged in 😸')
+        return redirect('/get-top-40')
+    else:
+        flash('Sorry, that password isn\'t correct 😧 Try again.')
+        print(user)
+        print(user.password)
+        return render_template("login.html")
 
 
 @app.route('/register')
@@ -99,6 +119,8 @@ def logout():
 def get_top_40():
     """Display page to login to Spotify."""
 
+    print(session)
+
     if 'user' not in session:
         flash('Please login or register 👋🏻')
         return redirect('/')
@@ -124,18 +146,18 @@ def authorize_spotify():
     #     session['spotify_token'] = response['access_token']
     #     return redirect("/top-40")
 
-    print('THIS IS THE RESPONSE')
-    print(response)
-    print('\n\n\n')
-    print('THIS IS THE SESSION')
-    print(session)
-    print('\n\n\n')
+    # print('THIS IS THE RESPONSE')
+    # print(response)
+    # print('\n\n\n')
+    # print('THIS IS THE SESSION')
+    # print(session)
+    # print('\n\n\n')
 
     flash("Succesfully logged into Spotify! 👾")
     session['spotify_token'] = response['access_token']
-
-    print('OUR SESSION')
-    print(session)
+    # 
+    # print('OUR SESSION')
+    # print(session)
 
     return redirect("/top-40")
 
