@@ -15,7 +15,7 @@ class User(db.Model):
 
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     username = db.Column(db.String(25), unique=True, nullable=False)
-    password = db.Column(db.String(25), nullable=False)
+    password = db.Column(db.String(20), nullable=False)
     spotify_url = db.Column(db.String(150))
     img = db.Column(db.String(150))
 
@@ -52,7 +52,6 @@ class UserArtistLink(db.Model):
 
     # https://www.michaelcho.me/article/many-to-many-relationships-in-sqlalchemy-models-flask
     # https://www.pythoncentral.io/sqlalchemy-association-tables/
-
     __tablename__ = 'users_artists_link'
 
     users_artists_link_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
@@ -122,4 +121,4 @@ if __name__ == "__main__":
     from server import app
     connect_to_db(app)
     db.create_all()
-    print("Connected to DB ◕ ◡ ◕")
+    print("👾 Connected to DB 👾")
