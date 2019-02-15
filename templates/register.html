@@ -4,9 +4,13 @@
 
 {% block content %}
 
-<form action="">
+<form action="/register" method="POST">
   Username: <input type="text" name="username" required>
+  Enter a username between 1-25 characters.
+  <br>
   Password: <input type="password" name="password" required>
+  Enter a password between 4-20 characters.
+  <br>
   <input type="submit">
 </form>
 
