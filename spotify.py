@@ -36,7 +36,6 @@ def get_access_token(request):
 
     # gets the value of 'code' from the query string in the auth url
     auth_code = request.args.get('code')
-    print(auth_code)
 
     request_params = {
         'grant_type': 'authorization_code',
@@ -51,15 +50,7 @@ def get_access_token(request):
     # the client ID and secret key. can use base64 to encode and decode
     client_encoded_str = base64.b64encode(f"{SPOTIFY_CLIENT_ID}:{SPOTIFY_CLIENT_SECRET}".encode('ascii'))
 
-    print('THIS IS ENCODED STRING')
-    print(client_encoded_str)
-    print('\n\n\n')
-
     headers = {"Authorization": f"Basic {client_encoded_str.decode('ascii')}"}
-
-    print('THIS IS THE HEADER')
-    print(headers)
-    print('\n\n\n')
 
     # http://flask.pocoo.org/docs/1.0/reqcontext/
     # http://docs.python-requests.org/en/master/user/quickstart/
@@ -83,12 +74,8 @@ def get_top_artists(access_token):
     }
 
     url = SPOTIFY_TOP_ARTISTS_ENDPOINT + "?time_range=" + query_params['time_range'] + "&limit=" + query_params['limit']
-    print('THIS IS THE URL')
-    print(url)
-    print('\n\n\n')
 
     headers = {"Authorization": f"Bearer {access_token}"}
-
     response = requests.get(url, headers=headers)
 
     return response.json()
@@ -97,15 +84,15 @@ def get_top_artists(access_token):
 def format_artist_data(response):
     """Format top artist JSON data as a list of tuples: index, artist, url, and image."""
 
-    numbered_list = []
+    artists = []
 
     for index, item in enumerate(response['items'], 1):
-        numbered_list.append((index,
+        artists.append((index,
                             item['name'],
                             item['external_urls']['spotify'],
                             item['images'][2]['url']))
 
-    return numbered_list
+    return artists
 
 
 def get_user_profile(access_token):
