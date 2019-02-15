@@ -17,7 +17,7 @@ class User(db.Model):
     username = db.Column(db.String(25), unique=True, nullable=False)
     password = db.Column(db.String(20), nullable=False)
     spotify_url = db.Column(db.String(150))
-    img = db.Column(db.String(150))
+    img = db.Column(db.String(200))
 
     # https://www.michaelcho.me/article/many-to-many-relationships-in-sqlalchemy-models-flask
     artists = db.relationship('Artist', secondary='users_artists_link')
@@ -26,7 +26,7 @@ class User(db.Model):
     def __repr__(self):
         """Provide representation of class attributes when printed."""
 
-        return f"<User: user_id={self.user_id}, username={self.username}, spotify_url={self.spotify_url}, img_src={self.img}>"
+        return f"<User: user_id={self.user_id}, username={self.username}, spotify_url={self.spotify_url}, img={self.img}>"
 
 
 class Artist(db.Model):
