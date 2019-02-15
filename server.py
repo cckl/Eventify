@@ -155,7 +155,7 @@ def authorize_spotify():
 
     flash("Succesfully logged into Spotify! 👾")
     session['spotify_token'] = response['access_token']
-    # 
+    #
     # print('OUR SESSION')
     # print(session)
 
@@ -181,12 +181,24 @@ def show_top_40():
         formatted_res = spotify.format_artist_data(response)
 
         # get user get_user_profile
-        user = spotify.get_user_profile(access_token)
+        user_data = spotify.get_user_profile(access_token)
 
-        print('OUR SESSION')
-        print(session)
+        # add user spotify info to database
+        # also need condition to make sure this isn't re-added every time. check if None?
+        user_spotify_url = user_data['external_urls']['spotify']
+        user_img = user_data['images'][0]['url']
 
-        return render_template("top-40.html", artists=formatted_res, all_data=response, user=user)
+        user = User.query.filter_by(username = session['user']).first()
+        user.spotify_url = user_spotify_url
+        user.img = user_img
+
+        db.session.commit()
+
+        # add user top artists to database
+        # need to get formatted res list of tuples, and iterate over it and add to artists database
+        # then add the relationship to db?
+
+        return render_template("top-40.html", artists=formatted_res, all_data=response, user=user_data)
 
 
 if __name__ == "__main__":
