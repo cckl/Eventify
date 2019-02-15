@@ -11,6 +11,9 @@ app = Flask(__name__)
 app.secret_key = os.environ['FLASK_APP_KEY']
 app.jinja_env.undefined = StrictUndefined
 
+# function called a hook that can be run before anything else
+# look into Flask hook
+# use for session protected routes to check if user is logged in etc.
 
 @app.route('/')
 def show_homepage():
@@ -199,6 +202,8 @@ def show_top_40():
         # then add the relationship to db?
 
         return render_template("top-40.html", artists=formatted_res, all_data=response, user=user_data)
+
+
 
 
 if __name__ == "__main__":
