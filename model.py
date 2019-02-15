@@ -16,7 +16,7 @@ class User(db.Model):
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     username = db.Column(db.String(25), unique=True, nullable=False)
     password = db.Column(db.String(20), nullable=False)
-    spotify_url = db.Column(db.String(150))
+    spotify_url = db.Column(db.String(200))
     img = db.Column(db.String(200))
 
     # https://www.michaelcho.me/article/many-to-many-relationships-in-sqlalchemy-models-flask
@@ -36,8 +36,8 @@ class Artist(db.Model):
 
     artist_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(75), nullable=False)
-    spotify_url = db.Column(db.String(150), nullable=False)
-    img = db.Column(db.String(150))
+    spotify_url = db.Column(db.String(200), nullable=False)
+    img = db.Column(db.String(200))
 
     users = db.relationship('User', secondary='users_artists_link')
 
