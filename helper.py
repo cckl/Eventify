@@ -8,12 +8,14 @@ import views
 import spotify
 from model import User, Artist, Event, UserArtistLink, UserEventLink, connect_to_db, db
 
+
 def check_spotify_not_in_db(username):
     """Verifies a user's Spotify data is not in the database."""
 
-    current_user_id = User.query.filter_by(username=username).first().user_id
+    current_user = User.query.filter_by(username=username).first()
+    user_id = current_user.user_id
 
-    return current_user_id.spotify_url is None and UserArtistLink.query.get(current_user_id) is None
+    return current_user.spotify_url is None and UserArtistLink.query.get(user_id) is None
 
 
 def add_user_db(access_token):

@@ -168,12 +168,12 @@ def show_top_40():
         response = spotify.get_top_artists(access_token)
         artists = spotify.format_artist_data(response)
 
-        # call helper functions to add user and artists to db
-        # need to add condition that existing users and artists are not always being added
-
-        helper.add_user_db(access_token)
-        helper.add_artist_db(access_token)
-        helper.add_user_artist_link(access_token)
+        # add new user's info to db
+        username = session['user']
+        if helper.check_spotify_not_in_db(username):
+            helper.add_user_db(access_token)
+            helper.add_artist_db(access_token)
+            helper.add_user_artist_link(access_token)
 
         return render_template("top-40.html", artists=artists, all_data=response, user=user_data)
 
