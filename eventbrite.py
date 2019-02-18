@@ -2,6 +2,7 @@
 
 import os
 import requests
+import urllib
 
 EVENTBRITE_APP_KEY = os.environ['EVENTBRITE_APP_KEY']
 EVENTBRITE_CLIENT_SECRET=os.environ['EVENTBRITE_CLIENT_SECRET']
@@ -21,10 +22,10 @@ def get_events_data(artist, city):
         'expand': 'venue'
     }
 
+    url_args = '&'.join([f"{key}={urllib.parse.quote(val)}" for key, val in query_params.items()])
+    url = f"{EVENTBRITE_SEARCH_ENDPOINT}/?{url_args}"
+    
     headers = {"Authorization": f"Bearer {EVENTBRITE_OAUTH_TOKEN}"}
-
-    url = EVENTBRITE_SEARCH_ENDPOINT + '?q=' + query_params['q'] + '&location.address=' + query_params['location.address'] + '&categories=103&expand=venue'
-
     response = requests.get(url, headers=headers)
 
     return response.json()
