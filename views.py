@@ -8,6 +8,7 @@ from jinja2 import StrictUndefined
 from model import User, Artist, Event, UserArtistLink, UserEventLink
 from model import connect_to_db, db
 import spotify
+import eventbrite
 import helper
 
 app = Flask(__name__)
@@ -176,5 +177,26 @@ def show_top_40():
             helper.add_user_artist_link(access_token)
 
         return render_template("top-40.html", artists=artists, all_data=response, user=user_data)
+
+
+@app.route('/event-search')
+def search_events():
+    """Search for events using the Eventbrite API."""
+
+    return render_template("event-search.html")
+
+
+@app.route('/event-results', methods=['POST'])
+def process_event_search():
+    """Returns event search results from the Eventbrite API."""
+
+    # Set up basic input to test API requests first
+    artist = request.form.get('artist')
+    city = request.form.get('city')
+
+    events = eventbrite.get_events_data(artist, city)
+
+    return render_template("event-results.html", events=events)
+
 
 # https://realpython.com/the-model-view-controller-mvc-paradigm-summarized-with-legos/

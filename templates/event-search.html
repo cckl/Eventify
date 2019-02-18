@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %} Search for an event {% endblock%}
+
+{% block content %}
+
+<h2>Search for an artist</h2>
+<form action="/event-results" method="POST">
+  Artist name: <input type="text" name="artist">
+  <br>
+  City: <input type="text" name="city">
+  <input type="submit">
+</form>
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %} Search for an event {% endblock%}
+
+{% block content %}
+
+<h2>Event results</h2>
+{% for event in events['events'] %}
+  {{ event['name']['text'] }}
+  {{ event['url'] }}
+  {{ event['venue']}}
+  <br>
+  <br>
+{% endfor %}
+
+<br>
+<br>
+
+{{ events }}
+
+{% endblock %}
