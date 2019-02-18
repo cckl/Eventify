@@ -82,7 +82,7 @@ def get_top_artists(access_token):
 
 
 def format_artist_data(response):
-    """Format top artist JSON data as a list of tuples: index, artist, url, and image."""
+    """Format top artist JSON data as a list of tuples: index, artist name, url, and image."""
 
     artists = []
 

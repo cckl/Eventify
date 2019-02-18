@@ -14,17 +14,17 @@ app = Flask(__name__)
 app.secret_key = os.environ['FLASK_APP_KEY']
 app.jinja_env.undefined = StrictUndefined
 
-# function called a hook that can be run before anything else
-# look into Flask hook
-# use for session protected routes to check if user is logged in etc.
-
+# session protected routes: use hook or Flask.g?
+# user not logged in to app or Spotify --> "/"
+# user logged in to app
+    # first time user: "/get-top-40"
+    # returning user "/top-40"
 
 @app.route('/')
 def show_homepage():
     """Display homepage."""
 
     session.clear()
-    print(session)
 
     if 'user' in session:
         if 'spotify_token' in session:
@@ -65,7 +65,7 @@ def process_login():
         if password == user.password:
             session['user'] = username
             flash('Successfully logged in 😸')
-            return redirect('/get-top-40')
+            return redirect('/top-40')
         else:
             flash('Sorry, that password isn\'t correct 😧 Try again.')
             return render_template("login.html")
@@ -103,6 +103,7 @@ def process_registration():
     else:
         db.session.add(User(username=username, password=password))
         db.session.commit()
+
         # creates a user session
         session['user'] = username
         print(session)
@@ -112,17 +113,16 @@ def process_registration():
 
 @app.route('/logout')
 def logout():
-    """Logout."""
+    """Logout user."""
 
     session.clear()
-    print(session)
 
     return redirect("/")
 
 
 @app.route('/get-top-40')
 def get_top_40():
-    """Display page to login to Spotify."""
+    """Display login page to Spotify."""
 
     print(session)
 
@@ -170,8 +170,10 @@ def show_top_40():
 
         # call helper functions to add user and artists to db
         # need to add condition that existing users and artists are not always being added
+
         helper.add_user_db(access_token)
         helper.add_artist_db(access_token)
+        helper.add_user_artist_link(access_token)
 
         return render_template("top-40.html", artists=artists, all_data=response, user=user_data)
 
