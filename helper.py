@@ -10,7 +10,7 @@ from model import User, Artist, Event, UserArtistLink, UserEventLink, connect_to
 
 
 def check_spotify_not_in_db(username):
-    """Verifies a user's Spotify data is not in the database."""
+    """Verifies that a user's Spotify data is not in the database."""
 
     current_user = User.query.filter_by(username=username).first()
     user_id = current_user.user_id
@@ -21,11 +21,12 @@ def check_spotify_not_in_db(username):
 def add_user_db(access_token):
     """Add user info to database after Spotify login."""
 
+    # get user data from spotify response.json()
     user_data = spotify.get_user_profile(access_token)
-
     user_spotify_url = user_data['external_urls']['spotify']
     user_img = user_data['images'][0]['url']
 
+    # get user in db to update values
     user = User.query.filter_by(username=session['user']).first()
     user.spotify_url = user_spotify_url
     user.img = user_img
@@ -36,7 +37,7 @@ def add_user_db(access_token):
 def add_artist_db(access_token):
     """Add artist info to database after Spotify login."""
 
-    # get artist info
+    # get artist info from spotify response.json()
     response = spotify.get_top_artists(access_token)
     artists = spotify.format_artist_data(response)
 
@@ -45,7 +46,7 @@ def add_artist_db(access_token):
         artist_spotify_url = artist[2]
         artist_img = artist[3]
 
-        # if artist already exists in db, skip and go to nextself
+        # if artist already exists in db, skip and go to next one
         # if artist doesn't exist, add to db
         if Artist.query.filter_by(name=artist_name).first():
             continue
@@ -59,13 +60,11 @@ def add_artist_db(access_token):
 def add_user_artist_link(access_token):
     """Add user and artist link info to association table."""
 
-    # get current user
+    # get current user from session
     username = session['user']
     current_user_id = User.query.filter_by(username=username).first().user_id
 
-    # get list of artist info
-    # iterate over each elem which is a tuple
-    # add user_id, artist_id, and created_at to db
+    # get list of artist info from spotify response.json()
     response = spotify.get_top_artists(access_token)
     artists = spotify.format_artist_data(response)
 
@@ -73,7 +72,7 @@ def add_user_artist_link(access_token):
         name = artist[1]
         artist_id = Artist.query.filter_by(name=name).first().artist_id
 
-        # user artist link object
+        # instantiate user artist link object
         link = UserArtistLink(user_id=current_user_id, artist_id=artist_id, created_at=datetime.now())
 
         db.session.add(link)

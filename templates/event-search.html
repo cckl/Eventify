@@ -6,9 +6,19 @@
 
 <h2>Search for an artist</h2>
 <form action="/event-results" method="POST">
-  Artist name: <input type="text" name="artist">
-  <br>
-  City: <input type="text" name="city">
+  Artist name:
+    <input type="text" name="artist">
+    <br>
+  City:
+    <input type="text" name="city">
+    <br>
+  Within:
+    <select name="distance">
+      <option value="5mi">5 miles</option>
+      <option value="10mi">10 miles</option>
+      <option value="25mi">25 miles</option>
+      <option value="50mi">50 miles</option>
+    </select>
   <input type="submit">
 </form>
 

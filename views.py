@@ -15,11 +15,8 @@ app = Flask(__name__)
 app.secret_key = os.environ['FLASK_APP_KEY']
 app.jinja_env.undefined = StrictUndefined
 
-# session protected routes: use hook or Flask.g?
-# user not logged in to app or Spotify --> "/"
-# user logged in to app
-    # first time user: "/get-top-40"
-    # returning user "/top-40"
+# TODO: Check for user login through authentication, not just sessions
+# Use Flask.g and decorators
 
 @app.route('/')
 def show_homepage():
@@ -107,7 +104,6 @@ def process_registration():
 
         # creates a user session
         session['user'] = username
-        print(session)
         flash('Successfully created an account. 🐙')
         return redirect('/get-top-40')
 
@@ -123,9 +119,7 @@ def logout():
 
 @app.route('/get-top-40')
 def get_top_40():
-    """Display login page to Spotify."""
-
-    print(session)
+    """Display Spotify login."""
 
     if 'user' not in session:
         flash('Please login or register 👋🏻')
@@ -143,7 +137,6 @@ def authorize_spotify():
     """Spotify authorization callback."""
 
     response = spotify.get_access_token(request)
-
     flash("Succesfully logged into Spotify! 👾")
     session['spotify_token'] = response['access_token']
 
@@ -193,10 +186,16 @@ def process_event_search():
     # Set up basic input to test API requests first
     artist = request.form.get('artist')
     city = request.form.get('city')
+    distance = request.form.get('distance')
 
-    events = eventbrite.get_events_data(artist, city)
+    response = eventbrite.get_events_data(artist, city, distance)
 
-    return render_template("event-results.html", events=events)
-
+    # TODO: where to add error code checking in general?
+    # check for valid location input
+    if response == 'location invalid':
+        flash('You entered an invalid location. Please try your search again.')
+        return redirect('/event-search')
+    else:
+        return render_template("event-results.html", events=response)
 
 # https://realpython.com/the-model-view-controller-mvc-paradigm-summarized-with-legos/
