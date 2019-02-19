@@ -41,6 +41,7 @@ def add_artist_db(access_token):
     artists = spotify.format_artist_data(response)
 
     for artist in artists:
+        # you might want to extract the validation/extraction of data of the spotify response.
         artist_name = artist[1]
         artist_spotify_url = artist[2]
         artist_img = artist[3]
@@ -53,6 +54,7 @@ def add_artist_db(access_token):
             artist = Artist(name=artist_name, spotify_url=artist_spotify_url, img=artist_img)
             db.session.add(artist)
 
+    # you probably want to separate calling spotify and writing your database into separate functions.
     db.session.commit()
 
 

@@ -11,6 +11,7 @@ import spotify
 import eventbrite
 import helper
 
+# This doesn't really belong in views. I'd suggest something like a main,py or app.py to make it clear to the reader where the app begins.
 app = Flask(__name__)
 app.secret_key = os.environ['FLASK_APP_KEY']
 app.jinja_env.undefined = StrictUndefined
@@ -25,8 +26,9 @@ app.jinja_env.undefined = StrictUndefined
 def show_homepage():
     """Display homepage."""
 
-    session.clear()
+    session.clear()  # Does this line make the following session checks always false?
 
+    # This repeated structure can be extracted. We spoke about using a flask lifecycle hook or decorator as ways to do this.
     if 'user' in session:
         if 'spotify_token' in session:
             flash('You are already logged in to Spotify.')
@@ -57,6 +59,7 @@ def show_login():
 def process_login():
     """Process user login."""
 
+    # I'd expect some kind of form validation to be required here.
     username = request.form.get('username')
     password = request.form.get('password')
 
@@ -71,6 +74,8 @@ def process_login():
             flash('Sorry, that password isn\'t correct 😧 Try again.')
             return render_template("login.html")
     else:
+        # It's common to see the message for this branch be the same as incorrect password
+        # to prevent attackers from probing for users.
         flash('No user with that username was found. Please try again.')
         return render_template("login.html")
 
@@ -102,11 +107,15 @@ def process_registration():
         flash('Sorry, an account with that username already exists ☹️')
         return render_template("register.html")
     else:
+        # This use of db inline stands out to me.
+        # Typically there's some abstraction of what registering "does".
+        # Extracting this will make testing easier; right now, you'd be dealing with a hard coupling of this code in your test.
         db.session.add(User(username=username, password=password))
         db.session.commit()
 
         # creates a user session
         session['user'] = username
+        # You might try using python's logging package for this print call.
         print(session)
         flash('Successfully created an account. 🐙')
         return redirect('/get-top-40')
@@ -165,6 +174,8 @@ def show_top_40():
         access_token = session['spotify_token']
 
         # get user profile and artist info
+        # You might think about all the ways calling a partner's api can fail.
+        # We use a library called tenacity when calling services to add resilence.
         user_data = spotify.get_user_profile(access_token)
         response = spotify.get_top_artists(access_token)
         artists = spotify.format_artist_data(response)
@@ -191,6 +202,7 @@ def process_event_search():
     """Returns event search results from the Eventbrite API."""
 
     # Set up basic input to test API requests first
+    # This input could be validated
     artist = request.form.get('artist')
     city = request.form.get('city')
 

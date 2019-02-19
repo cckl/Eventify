@@ -63,6 +63,7 @@ def get_top_artists(access_token):
     """Get a user's top 40 artists."""
 
     # https://www.dataquest.io/blog/python-api-tutorial/
+    # this and the next line can be extracted to make this function much shorter.
     query_params = {
         'time_range': 'medium_term',
         'limit': '40'
@@ -80,6 +81,8 @@ def get_top_artists(access_token):
 def format_artist_data(response):
     """Format top artist JSON data as a list of tuples: index, artist name, url, and image."""
 
+    # adding an index here is a little odd. why not just do it later in the template?
+    # you might use a namedtuple or even a class in place of the vanilla tuple.
     artists = [(index, item['name'], item['external_urls']['spotify'], item['images'][2]['url'])
                 for index, item in enumerate(response['items'], 1)]
 
