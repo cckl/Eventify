@@ -4,9 +4,9 @@ import os
 from flask import Flask, flash, render_template, redirect, request, session
 from datetime import datetime
 
-import views
-import spotify
 from model import User, Artist, Event, UserArtistLink, UserEventLink, connect_to_db, db
+import spotify
+import views
 
 
 def check_spotify_not_in_db(username):

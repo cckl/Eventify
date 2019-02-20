@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
-#####################################################################
+########################################
 # Model definitions
 
 class User(db.Model):
@@ -118,7 +118,7 @@ def connect_to_db(app):
 
 
 if __name__ == "__main__":
-    from server import app
+    from app import app
     connect_to_db(app)
     db.create_all()
     print("👾 Connected to DB 👾")

@@ -5,15 +5,13 @@ from flask import Flask, flash, render_template, redirect, request, session
 from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import StrictUndefined
 
+from app import app
+import eventbrite
+import helper
 from model import User, Artist, Event, UserArtistLink, UserEventLink
 from model import connect_to_db, db
 import spotify
-import eventbrite
-import helper
 
-app = Flask(__name__)
-app.secret_key = os.environ['FLASK_APP_KEY']
-app.jinja_env.undefined = StrictUndefined
 
 # TODO: Check for user login through authentication, not just sessions
 # Use Flask.g and decorators
@@ -176,6 +174,14 @@ def show_top_40():
 def search_events():
     """Search for events using the Eventbrite API."""
 
+    # access_token = session['spotify_token']
+    #
+    #
+    # s_response = spotify.get_top_artists(access_token)
+    # artists = spotify.format_artist_data(s_response)
+    #
+    # events_list = eventbrite.get_events(artists)
+
     return render_template("event-search.html")
 
 
@@ -184,11 +190,17 @@ def process_event_search():
     """Returns event search results from the Eventbrite API."""
 
     # Set up basic input to test API requests first
-    artist = request.form.get('artist')
+    # artist = request.form.get('artist')
     city = request.form.get('city')
     distance = request.form.get('distance')
 
-    response = eventbrite.get_events_data(artist, city, distance)
+    access_token = session['spotify_token']
+    s_response = spotify.get_top_artists(access_token)
+    artists = spotify.format_artist_data(s_response)
+
+    response = eventbrite.get_events(artists, city, distance)
+
+    # response = eventbrite.get_events_data(artist, city, distance)
 
     # TODO: where to add error code checking in general?
     # check for valid location input
@@ -196,6 +208,6 @@ def process_event_search():
         flash('You entered an invalid location. Please try your search again.')
         return redirect('/event-search')
     else:
-        return render_template("event-results.html", events=response)
+        return render_template("event-results.html", results=response)
 
 # https://realpython.com/the-model-view-controller-mvc-paradigm-summarized-with-legos/

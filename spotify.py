@@ -2,8 +2,8 @@
 
 import os
 import base64
-import requests
 import urllib
+import requests
 
 
 SPOTIFY_AUTHORIZATION_URL='https://accounts.spotify.com/authorize'
