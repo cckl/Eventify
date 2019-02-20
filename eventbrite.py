@@ -12,17 +12,13 @@ EVENTBRITE_BATCH_ENDPOINT='https://www.eventbriteapi.com/v3/batch'
 def get_events(artists, city, distance):
     """Search for events given a list of top 40 Spotify artists."""
 
-    events_res = []
-
-    # search eventbrite for each artist
-    print(artists)
+    all_events = []
 
     for artist in artists:
         name = artist[1]
 
         city = '%20'.join(city.split())
 
-        # FIXME: make sure artist is in the event name so random events don't show up
         query_params = {
             'q': name,
             'location.address': city,
@@ -36,19 +32,30 @@ def get_events(artists, city, distance):
 
         headers = {"Authorization": f"Bearer {EVENTBRITE_OAUTH_TOKEN}"}
         response = requests.get(url, headers=headers)
-        response = response.json()
-        # print('\n\n\nRESPONSE')
-        # print(response['events'])
 
-        for event in response['events']:
-            if name in event['name']['text']:
-                print(event['name'])
-                events_res.append(event)
-        # print('\n\n\nEVENT')
-        # print(events_res)
-        time.sleep(0.1)
-    print(events_res)
-    return events_res
+        # check for error in response client_encoded_str
+        if response.status_code == 400:
+            if response.json()['error_detail']['ARGUMENTS_ERROR']['location.address'][0] == 'INVALID':
+                return "location invalid"
+        elif response.status_code == 200:
+            response = response.json()
+            # FIXME: there's no way of knowing that an event is relevant,
+            # aka the artist name is in the title until i filter the events.
+            # guess i have no choice but to call the function every time to check?
+            events_list = filter_events(name, response)
+            if events_list:
+                all_events.extend(events_list)
+
+    return all_events
+
+
+def filter_events(name, response):
+    """Filter Eventbrite event data for events with artist name in the title."""
+
+    filtered_events = [event for event in response['events'] if name in event['name']['text']]
+
+    print(filtered_events)
+    return filtered_events
 
 
 def get_events_data(artist, city, distance):
@@ -96,11 +103,11 @@ def search_batch_events(artist, city, distance):
         'expand': 'venue'
     }
 
-payload = [
-            {"method":"GET", "relative_url":"/events/search?q=martin roth&location.address=san francisco&categories=103&expand=venue&location.within=15mi"},
-            {"method":"GET", "relative_url":"/events/search?q=low steppa&location.address=san francisco&categories=103&expand=venue&location.within=15mi"}
-            ]
+    payload = [
+                {"method":"GET", "relative_url":"/events/search?q=martin roth&location.address=san francisco&categories=103&expand=venue&location.within=15mi"},
+                {"method":"GET", "relative_url":"/events/search?q=low steppa&location.address=san francisco&categories=103&expand=venue&location.within=15mi"}
+                ]
 
-headers = {"Authorization": f"Bearer {EVENTBRITE_OAUTH_TOKEN}"}
+    headers = {"Authorization": f"Bearer {EVENTBRITE_OAUTH_TOKEN}"}
 
-response = requests.post(EVENTBRITE_BATCH_ENDPOINT, data=payload, headers=headers)
+    response = requests.post(EVENTBRITE_BATCH_ENDPOINT, data=payload, headers=headers)

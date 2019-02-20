@@ -27,6 +27,7 @@ def show_homepage():
     """Display homepage."""
 
     session.clear()
+    print(session)
 
     if 'user' in session:
         if 'spotify_token' in session:
@@ -67,6 +68,8 @@ def process_login():
         if password == user.password:
             session['user'] = username
             flash('Successfully logged in 😸')
+            # FIXME: still redirecting to /get-top-40. maybe cuz spotify
+            # doesn't automatically login?
             return redirect('/top-40')
         else:
             flash('Sorry, that password isn\'t correct 😧 Try again.')
@@ -151,6 +154,8 @@ def authorize_spotify():
 def show_top_40():
     """Display user's top 40 Spotify artists."""
 
+    print(session)
+
     if 'spotify_token' not in session:
         if 'user' not in session:
             flash('Please login or register. 👋🏻')
@@ -214,6 +219,6 @@ def process_event_search():
         flash('You entered an invalid location. Please try your search again.')
         return redirect('/event-search')
     else:
-        return render_template("event-results.html", results=response)
+        return render_template("event-results.html", events=response)
 
 # https://realpython.com/the-model-view-controller-mvc-paradigm-summarized-with-legos/

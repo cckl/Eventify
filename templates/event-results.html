@@ -5,54 +5,19 @@
 {% block content %}
 
 <!-- https://www.shellhacks.com/jinja2-check-if-variable-empty-exists-defined-true/ -->
-{% if events['events']|length %}
-  {% for event in events %}
-    {{ event }}
-    <br><br>
-  {% endfor %}
-
-  <h2>Event results</h2>
-  {% for event in events['events'] %}
+<h2>Event results</h2>
+{% for event in events %}
     <img src="{{ event['logo']['original']['url'] }}" alt="" style="max-width: 500px">
     <br><br>
-    {{ event['name']['text'] }}
+    Name: {{ event['name']['text'] }}
     <br><br>
-    {{ event['description']['text'] }}
+    Description: {{ event['description']['text'] }}
     <br><br>
-    {{ event['url'] }}
+    Event URL: {{ event['url'] }}
     <br><br>
-    {{ event['venue']}}
+    Venue info: {{ event['venue']}}
     <br><br>
-  {% endfor %}
-
-  <br>
-  <br>
-
-  <br><br><br><br>
-
-  EVENTS['EVENTS']
-  <br>
-  {{ events['events'] }}
-
-  <br><br><br><br>
-  ADDRESS
-  {{ events['location']['address'] }}
-  <br>
-  WITHIN
-  {{ events['location']['within'] }}
-  <br>
-  LOCATION
-  {{ events['location']['augmented_location'] }}
-  <br>
-  LONG
-  {{ events['location']['longitude'] }}
-  <br>
-  LAT
-  {{ events['location']['latitude'] }}
-{% else %}
-  <p>Sorry, no events were found.</p>
-
-{% endif %}
+{% endfor %}
 
 
 {% endblock %}
