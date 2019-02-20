@@ -1,13 +1,11 @@
 """Handles Eventbrite authorization and API requests."""
 
 import os
-import requests
 import urllib
+import requests
 import time
+from config import EVENTBRITE_APP_KEY, EVENTBRITE_CLIENT_SECRET, EVENTBRITE_OAUTH_TOKEN
 
-EVENTBRITE_APP_KEY = os.environ['EVENTBRITE_APP_KEY']
-EVENTBRITE_CLIENT_SECRET=os.environ['EVENTBRITE_CLIENT_SECRET']
-EVENTBRITE_OAUTH_TOKEN=os.environ['EVENTBRITE_OAUTH_TOKEN']
 EVENTBRITE_SEARCH_ENDPOINT='https://www.eventbriteapi.com/v3/events/search'
 EVENTBRITE_BATCH_ENDPOINT='https://www.eventbriteapi.com/v3/batch'
 

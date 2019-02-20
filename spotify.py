@@ -4,12 +4,9 @@ import os
 import base64
 import urllib
 import requests
-
+from config import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET
 
 SPOTIFY_AUTHORIZATION_URL='https://accounts.spotify.com/authorize'
-SPOTIFY_REDIRECT_URI='http://localhost:5000/spotify-auth'
-SPOTIFY_CLIENT_ID=os.environ['SPOTIFY_CLIENT_ID']
-SPOTIFY_CLIENT_SECRET=os.environ['SPOTIFY_CLIENT_SECRET']
 SPOTIFY_TOKEN_ENDPOINT='https://accounts.spotify.com/api/token'
 SPOTIFY_USER_ENDPOINT = 'https://api.spotify.com/v1/me'
 SPOTIFY_TOP_ARTISTS_ENDPOINT = 'https://api.spotify.com/v1/me/top/artists'
