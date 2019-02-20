@@ -12,6 +12,12 @@ from model import User, Artist, Event, UserArtistLink, UserEventLink
 from model import connect_to_db, db
 import spotify
 
+# from config import FLASK_APP_KEY
+
+# app = Flask(__name__)
+# app.secret_key = 'FLASK_APP_KEY'
+# app.jinja_env.undefined = StrictUndefined
+
 
 # TODO: Check for user login through authentication, not just sessions
 # Use Flask.g and decorators
