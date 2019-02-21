@@ -3,7 +3,7 @@
 import os
 import urllib
 import requests
-import time
+from datetime import datetime
 from config import EVENTBRITE_APP_KEY, EVENTBRITE_CLIENT_SECRET, EVENTBRITE_OAUTH_TOKEN
 
 EVENTBRITE_SEARCH_ENDPOINT='https://www.eventbriteapi.com/v3/events/search'
@@ -34,17 +34,20 @@ def get_events(artists, city, distance):
         response = requests.get(url, headers=headers)
 
         # check for error in response client_encoded_str
+        # can extract to another function
         if response.status_code == 400:
             if response.json()['error_detail']['ARGUMENTS_ERROR']['location.address'][0] == 'INVALID':
                 return "location invalid"
         elif response.status_code == 200:
             response = response.json()
+
             # FIXME: there's no way of knowing that an event is relevant,
             # aka the artist name is in the title until i filter the events.
             # guess i have no choice but to call the function every time to check?
-            events_list = filter_events(name, response)
-            if events_list:
-                results.extend(events_list)
+            filtered_events = filter_events(name, response)
+            if filtered_events:
+                formatted_events = format_events(filtered_events)
+                results.extend(formatted_events)
 
     return results
 
@@ -58,36 +61,32 @@ def filter_events(name, response):
     return filtered_events
 
 
-def get_events_data(artist, city, distance):
-    """Searches Eventbrite with artist name and location."""
-    # TODO: fix request params by city as results aren't accurate
-    # sometimes results yield "events"
-    # sometimes yield "top_match_events"?
+def format_events(filtered_events):
+    """Formats JSON data to store only necessary information."""
 
-    # change input city to correct format
-    city = '%20'.join(city.split())
+    formatted_events = []
 
-    # FIXME: make sure artist is in the event name so random events don't show up
-    query_params = {
-        'q': artist,
-        'location.address': city,
-        'location.within': distance,
-        'categories': '103',
-        'expand': 'venue'
-    }
+    for event in filtered_events:
+        address = f"{event['venue']['address']['address_1']}, {event['venue']['address']['city'] }, {event['venue']['address']['region']}, {event['venue']['address']['postal_code']}"
+        iso_starts_at = event['start']['local']
+        iso_ends_at = event['end']['local']
 
-    url_args = '&'.join([f"{key}={urllib.parse.quote(val)}" for key, val in query_params.items()])
-    url = f"{EVENTBRITE_SEARCH_ENDPOINT}/?{url_args}"
+        formatted_event = {
+            'name': event['name']['text'],
+            'description': event['description']['text'],
+            'starts_at': datetime.strptime(iso_starts_at, '%Y-%m-%dT%H:%M:%S'),
+            'ends_at': datetime.strptime(iso_ends_at, '%Y-%m-%dT%H:%M:%S'),
+            'venue': event['venue']['name'],
+            'address': address,
+            'url': event['url'],
+            'img': event['logo']['original']['url']
+            }
 
-    headers = {"Authorization": f"Bearer {EVENTBRITE_OAUTH_TOKEN}"}
-    response = requests.get(url, headers=headers)
+        formatted_events.append(formatted_event)
+        print(formatted_event)
 
-    # handle invalid location error
-    if response.status_code == 400:
-        if response.json()['error_detail']['ARGUMENTS_ERROR']['location.address'][0] == 'INVALID':
-            return "location invalid"
-    elif response.status_code == 200:
-        return response.json()
+    print(formatted_events)
+    return formatted_events
 
 
 def search_batch_events(artist, city, distance):
@@ -103,6 +102,9 @@ def search_batch_events(artist, city, distance):
         'expand': 'venue'
     }
 
+    # needs to be json encoded
+    # json.dumps()
+    # think of python as a 'superset' of json
     payload = [
                 {"method":"GET", "relative_url":"/events/search?q=martin roth&location.address=san francisco&categories=103&expand=venue&location.within=15mi"},
                 {"method":"GET", "relative_url":"/events/search?q=low steppa&location.address=san francisco&categories=103&expand=venue&location.within=15mi"}

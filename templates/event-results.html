@@ -4,24 +4,22 @@
 
 {% block content %}
 <!-- https://www.shellhacks.com/jinja2-check-if-variable-empty-exists-defined-true/ -->
+<!-- flatten these - can do via a model class? or can extract to subtemplate -->
 <h2>Event results</h2>
 {% for event in events %}
-    <img src="{{ event['logo']['original']['url'] }}" alt="" style="max-width: 500px">
+    <img src="{{ event['img'] }}" alt="" style="max-width: 500px">
     <br><br>
-    Name: {{ event['name']['text'] }}
+    Name: {{ event['name'] }}
     <br><br>
-    Description: {{ event['description']['text'] }}
+    Description: {{ event['description'] }}
     <br><br>
-    Event URL: {{ event['url'] }}
+    Date: {{ event['starts_at'] }} -- {{ event['ends_at'] }}
     <br><br>
-    Date: {{ event['start']['local'] }} -- {{ event['end']['local']}}
+    Venue info: {{ event['venue'] }},
+    {{ event['address'] }}
     <br><br>
-    Venue info: {{ event['venue']['name']}},
-    {{ event['venue']['address']['address_1']}},
-    {{ event['venue']['address']['city']}}, {{ event['venue']['address']['region']}},
-    {{ event['venue']['address']['postal_code']}}
+    <button type="button" name="register"><a href="{{ event['url'] }}" target="_blank">RSVP on Eventbrite</a></button>
     <br><br>
 {% endfor %}
-
 
 {% endblock %}

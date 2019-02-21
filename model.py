@@ -75,11 +75,12 @@ class Event(db.Model):
 
     event_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
-    starts_at = db.Column(db.String(100), nullable=False)
-    ends_at = db.Column(db.String(100), nullable=False)
+    starts_at = db.Column(db.DateTime(timezone=False), nullable=False)
+    ends_at = db.Column(db.DateTime(timezone=False), nullable=False)
     venue = db.Column(db.String(150))
     address = db.Column(db.String(250))
     eventbrite_url = db.Column(db.String(250), nullable=False)
+    img = db.Column(db.String(200))
 
     users = db.relationship('User', secondary="users_events_link")
 

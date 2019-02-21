@@ -22,7 +22,6 @@ def show_homepage():
     """Display homepage."""
 
     session.clear()
-    print(session)
 
     if 'user' in session:
         if 'spotify_token' in session:
@@ -67,10 +66,10 @@ def process_login():
             # doesn't automatically login?
             return redirect('/top-40')
         else:
-            flash('Sorry, that password isn\'t correct 😧 Try again.')
+            flash('Sorry, that username or password isn\'t correct 😧 Try again.')
             return render_template("login.html")
     else:
-        flash('No user with that username was found. Please try again.')
+        flash('Sorry, that username or password isn\'t correct 😧 Try again.')
         return render_template("login.html")
 
 
@@ -167,6 +166,10 @@ def show_top_40():
 
         # add new user's info to db
         username = session['user']
+
+        # after classes encapsulate instantiation, can create function "add user"
+        # should extract the user/artist creation process to another filter_events
+        # 'if': can this be extracted
         if helper.check_spotify_not_in_db(username):
             helper.add_user_spotify_db(access_token)
             helper.add_artist_db(access_token)

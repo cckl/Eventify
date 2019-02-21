@@ -8,6 +8,8 @@ from model import User, Artist, Event, UserArtistLink, UserEventLink, connect_to
 import spotify
 import views
 
+# can be encapsulated in model.py classes
+
 def add_user_db(username, password):
     """Adds username and password info to users table."""
 
@@ -90,21 +92,19 @@ def add_events_db(results):
     """Add event listing info to events table."""
 
     for event in results:
-        print(event)
-        name = event['name']['text']
-        starts_at = event['start']['local']
-        ends_at = event['end']['local']
-        venue = event['venue']['name']
-        address = f"{event['venue']['address']['address_1']}, {event['venue']['address']['city']}, {event['venue']['address']['region']}, {event['venue']['address']['postal_code']}"
-        print(address)
+        name = event['name']
+        starts_at = event['starts_at']
+        ends_at = event['ends_at']
+        venue = event['venue']
+        address = event['address']
         url = event['url']
-        print(url)
+        img = event['img']
 
         # checks for existing event in table. if found, skip
         if Event.query.filter_by(eventbrite_url=url).first():
             continue
         else:
-            new_event = Event(name=name, starts_at=starts_at, ends_at=ends_at, venue=venue, address=address, eventbrite_url=url)
+            new_event = Event(name=name, starts_at=datetime_start, ends_at=datetime_end, venue=venue, address=address, eventbrite_url=url, img=img)
             db.session.add(new_event)
 
     db.session.commit()
@@ -117,7 +117,7 @@ def add_user_event_link(response):
     current_user_id = User.query.filter_by(username=username).first().user_id
 
     for event in response:
-        name = event['name']['text']
+        name = event['name']
         event_id = Event.query.filter_by(name=name).first().event_id
 
         # instantiate user event link object
