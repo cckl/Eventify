@@ -8,18 +8,24 @@ from model import User, Artist, Event, UserArtistLink, UserEventLink, connect_to
 import spotify
 import views
 
+def add_user_db(username, password):
+    """Adds username and password info to users table."""
+
+    db.session.add(User(username=username, password=password))
+    db.session.commit()
+
 
 def check_spotify_not_in_db(username):
-    """Verifies that a user's Spotify data is not in the database."""
+    """Verifies that a user's Spotify data is not in the users table."""
 
     current_user = User.query.filter_by(username=username).first()
     user_id = current_user.user_id
 
-    return current_user.spotify_url is None and UserArtistLink.query.get(user_id) is None
+    return current_user.spotify_url == None
 
 
-def add_user_db(access_token):
-    """Add user info to database after Spotify login."""
+def add_user_spotify_db(access_token):
+    """Add user info to users table after Spotify login."""
 
     # get user data from spotify response.json()
     user_data = spotify.get_user_profile(access_token)
@@ -35,7 +41,7 @@ def add_user_db(access_token):
 
 
 def add_artist_db(access_token):
-    """Add artist info to database after Spotify login."""
+    """Add artist info to artists table after Spotify login."""
 
     # get artist info from spotify response.json()
     response = spotify.get_top_artists(access_token)
@@ -74,6 +80,48 @@ def add_user_artist_link(access_token):
 
         # instantiate user artist link object
         link = UserArtistLink(user_id=current_user_id, artist_id=artist_id, created_at=datetime.now())
+
+        db.session.add(link)
+
+    db.session.commit()
+
+
+def add_events_db(results):
+    """Add event listing info to events table."""
+
+    for event in results:
+        print(event)
+        name = event['name']['text']
+        starts_at = event['start']['local']
+        ends_at = event['end']['local']
+        venue = event['venue']['name']
+        address = f"{event['venue']['address']['address_1']}, {event['venue']['address']['city']}, {event['venue']['address']['region']}, {event['venue']['address']['postal_code']}"
+        print(address)
+        url = event['url']
+        print(url)
+
+        # checks for existing event in table. if found, skip
+        if Event.query.filter_by(eventbrite_url=url).first():
+            continue
+        else:
+            new_event = Event(name=name, starts_at=starts_at, ends_at=ends_at, venue=venue, address=address, eventbrite_url=url)
+            db.session.add(new_event)
+
+    db.session.commit()
+
+
+def add_user_event_link(response):
+    """Add user and event link info to association table."""
+
+    username = session['user']
+    current_user_id = User.query.filter_by(username=username).first().user_id
+
+    for event in response:
+        name = event['name']['text']
+        event_id = Event.query.filter_by(name=name).first().event_id
+
+        # instantiate user event link object
+        link = UserEventLink(user_id=current_user_id, event_id=event_id, created_at=datetime.now())
 
         db.session.add(link)
 

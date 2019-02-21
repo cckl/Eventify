@@ -75,16 +75,18 @@ class Event(db.Model):
 
     event_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
-    starts_at = db.Column(db.DateTime(timezone=True))
-    location = db.Column(db.String(50))
-    eventbrite_url = db.Column(db.String(250))
+    starts_at = db.Column(db.String(100), nullable=False)
+    ends_at = db.Column(db.String(100), nullable=False)
+    venue = db.Column(db.String(150))
+    address = db.Column(db.String(250))
+    eventbrite_url = db.Column(db.String(250), nullable=False)
 
     users = db.relationship('User', secondary="users_events_link")
 
     def __repr__(self):
         """Provide representation of class attributes when printed."""
 
-        return f"<Event: event_id={self.event_id},  event_name={self.name}, date={self.starts_at}, city={self.location}, url={self.eventbrite_url}>"
+        return f"<Event: event_id={self.event_id},  name={self.name}, date={self.starts_at}, venue={self.venue}, url={self.eventbrite_url}>"
 
 
 class UserEventLink(db.Model):
@@ -95,6 +97,7 @@ class UserEventLink(db.Model):
     users_events_link_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     event_id = db.Column(db.Integer, db.ForeignKey('events.event_id'))
+    created_at = db.Column(db.DateTime(timezone=True))
 
     users = db.relationship('User', backref='users_events_link')
     events = db.relationship('Event', backref='users_events_link')

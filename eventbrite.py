@@ -12,7 +12,7 @@ EVENTBRITE_BATCH_ENDPOINT='https://www.eventbriteapi.com/v3/batch'
 def get_events(artists, city, distance):
     """Search for events given a list of top 40 Spotify artists."""
 
-    all_events = []
+    results = []
 
     for artist in artists:
         name = artist[1]
@@ -44,9 +44,9 @@ def get_events(artists, city, distance):
             # guess i have no choice but to call the function every time to check?
             events_list = filter_events(name, response)
             if events_list:
-                all_events.extend(events_list)
+                results.extend(events_list)
 
-    return all_events
+    return results
 
 
 def filter_events(name, response):

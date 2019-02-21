@@ -12,15 +12,10 @@ from model import User, Artist, Event, UserArtistLink, UserEventLink
 from model import connect_to_db, db
 import spotify
 
-# from config import FLASK_APP_KEY
-
-# app = Flask(__name__)
-# app.secret_key = 'FLASK_APP_KEY'
-# app.jinja_env.undefined = StrictUndefined
-
-
 # TODO: Check for user login through authentication, not just sessions
 # Use Flask.g and decorators
+# TODO: Input validation for all forms
+# TODO: Add function decorators to handle user login and logout
 
 @app.route('/')
 def show_homepage():
@@ -106,8 +101,7 @@ def process_registration():
         flash('Sorry, an account with that username already exists ☹️')
         return render_template("register.html")
     else:
-        db.session.add(User(username=username, password=password))
-        db.session.commit()
+        helper.add_user_db(username, password)
 
         # creates a user session
         session['user'] = username
@@ -174,7 +168,7 @@ def show_top_40():
         # add new user's info to db
         username = session['user']
         if helper.check_spotify_not_in_db(username):
-            helper.add_user_db(access_token)
+            helper.add_user_spotify_db(access_token)
             helper.add_artist_db(access_token)
             helper.add_user_artist_link(access_token)
 
@@ -185,14 +179,6 @@ def show_top_40():
 def search_events():
     """Search for events using the Eventbrite API."""
 
-    # access_token = session['spotify_token']
-    #
-    #
-    # s_response = spotify.get_top_artists(access_token)
-    # artists = spotify.format_artist_data(s_response)
-    #
-    # events_list = eventbrite.get_events(artists)
-
     return render_template("event-search.html")
 
 
@@ -200,8 +186,6 @@ def search_events():
 def process_event_search():
     """Returns event search results from the Eventbrite API."""
 
-    # Set up basic input to test API requests first
-    # artist = request.form.get('artist')
     city = request.form.get('city')
     distance = request.form.get('distance')
 
@@ -209,16 +193,16 @@ def process_event_search():
     s_response = spotify.get_top_artists(access_token)
     artists = spotify.format_artist_data(s_response)
 
-    response = eventbrite.get_events(artists, city, distance)
-
-    # response = eventbrite.get_events_data(artist, city, distance)
+    results = eventbrite.get_events(artists, city, distance)
 
     # TODO: where to add error code checking in general?
     # check for valid location input
-    if response == 'location invalid':
+    if results == 'location invalid':
         flash('You entered an invalid location. Please try your search again.')
         return redirect('/event-search')
     else:
-        return render_template("event-results.html", events=response)
+        helper.add_events_db(results)
+        helper.add_user_event_link(results)
+        return render_template("event-results.html", events=results)
 
 # https://realpython.com/the-model-view-controller-mvc-paradigm-summarized-with-legos/

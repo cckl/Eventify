@@ -3,7 +3,6 @@
 {% block title %} Search for an event {% endblock%}
 
 {% block content %}
-
 <!-- https://www.shellhacks.com/jinja2-check-if-variable-empty-exists-defined-true/ -->
 <h2>Event results</h2>
 {% for event in events %}
@@ -15,7 +14,12 @@
     <br><br>
     Event URL: {{ event['url'] }}
     <br><br>
-    Venue info: {{ event['venue']}}
+    Date: {{ event['start']['local'] }} -- {{ event['end']['local']}}
+    <br><br>
+    Venue info: {{ event['venue']['name']}},
+    {{ event['venue']['address']['address_1']}},
+    {{ event['venue']['address']['city']}}, {{ event['venue']['address']['region']}},
+    {{ event['venue']['address']['postal_code']}}
     <br><br>
 {% endfor %}
 
