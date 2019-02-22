@@ -80,7 +80,7 @@ class Event(db.Model):
     venue = db.Column(db.String(150))
     address = db.Column(db.String(250))
     eventbrite_url = db.Column(db.String(250), nullable=False)
-    img = db.Column(db.String(200))
+    img = db.Column(db.String(250))
 
     users = db.relationship('User', secondary="users_events_link")
 
@@ -112,13 +112,26 @@ class UserEventLink(db.Model):
 #####################################################################
 # Helper functions
 
-def connect_to_db(app):
+def connect_to_db(app, db_uri='postgresql:///appdb'):
     """Connect the database to the Flask app."""
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///testdb'
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
+
+
+#####################################################################
+# Example testdb data
+
+def test_data():
+    """Seeds testdb test database with example data."""
+
+    user1 = User(username='user1', password='password', spotify_url='www.spotify.com', img='www.img.com')
+
+    db.session.add(user1)
+    
+    db.session.commit()
 
 
 if __name__ == "__main__":

@@ -104,7 +104,7 @@ def add_events_db(results):
         if Event.query.filter_by(eventbrite_url=url).first():
             continue
         else:
-            new_event = Event(name=name, starts_at=datetime_start, ends_at=datetime_end, venue=venue, address=address, eventbrite_url=url, img=img)
+            new_event = Event(name=name, starts_at=starts_at, ends_at=ends_at, venue=venue, address=address, eventbrite_url=url, img=img)
             db.session.add(new_event)
 
     db.session.commit()
