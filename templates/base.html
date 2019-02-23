@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>{% block title %} Title here {% endblock %}</title>
 </head>
-<body>
+<body style="text-align: center">
     {% for message in get_flashed_messages() %}
         {{ message }}
     {% endfor %}

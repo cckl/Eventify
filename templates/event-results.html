@@ -6,20 +6,25 @@
 <!-- https://www.shellhacks.com/jinja2-check-if-variable-empty-exists-defined-true/ -->
 <!-- flatten these - can do via a model class? or can extract to subtemplate -->
 <h2>Event results</h2>
-{% for event in events %}
-    <img src="{{ event['img'] }}" alt="" style="max-width: 500px">
-    <br><br>
-    Name: {{ event['name'] }}
-    <br><br>
-    Description: {{ event['description'] }}
-    <br><br>
-    Date: {{ event['starts_at'] }} -- {{ event['ends_at'] }}
-    <br><br>
-    Venue info: {{ event['venue'] }},
-    {{ event['address'] }}
-    <br><br>
-    <button type="button" name="register"><a href="{{ event['url'] }}" target="_blank">RSVP on Eventbrite</a></button>
-    <br><br>
-{% endfor %}
+{% if events|length %}
+  {% for event in events %}
+      <img src="{{ event['img'] }}" alt="" style="max-width: 500px">
+      <br><br>
+      Name: {{ event['name'] }}
+      <br><br>
+      Description: {{ event['description'] }}
+      <br><br>
+      Date: {{ event['starts_at'] }} -- {{ event['ends_at'] }}
+      <br><br>
+      Venue info: {{ event['venue'] }},
+      {{ event['address'] }}
+      <br><br>
+      <button type="button" name="register"><a href="{{ event['url'] }}" target="_blank">RSVP on Eventbrite</a></button>
+      <br><br>
+  {% endfor %}
+{% else %}
+  <p>Sorry, no events near you were found ☹️</p>
+  <p><a href="/search-events">Try your search with a different city</a>, or search for related events!</p>
 
+{% endif %}
 {% endblock %}
