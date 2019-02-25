@@ -3,21 +3,29 @@
 {% block title %} Search for events {% endblock%}
 
 {% block content %}
+<div>
+  <h2>Choose your city and distance</h2>
+  <form id="event-search">
+    City:
+      <input type="text" name="city" id="city" value="San Francisco">
+      <br>
+    Within:
+      <select name="distance" id="distance">
+        <option value="5mi">5 miles</option>
+        <option value="10mi">10 miles</option>
+        <option value="25mi">25 miles</option>
+        <option selected value="50mi">50 miles</option>
+      </select>
+    <input type="submit">
+  </form>
+</div>
+<br><br>
+<div id="event-results">
 
-<h2>Choose your city and distance</h2>
-<form action="/event-results" method="POST">
-  City:
-    <input type="text" name="city">
-    <br>
-  Within:
-    <select name="distance">
-      <option value="5mi">5 miles</option>
-      <option value="10mi">10 miles</option>
-      <option value="25mi">25 miles</option>
-      <option value="50mi">50 miles</option>
-    </select>
-  <input type="submit">
-</form>
+</div>
+
+
+
 
 
 {% endblock %}
