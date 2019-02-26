@@ -148,8 +148,7 @@ def authorize_spotify():
 def show_top_40():
     """Display user's top 40 Spotify artists."""
 
-    print(session)
-
+    # TODO: Add handling for when Sptify token expires
     if 'spotify_token' not in session:
         if 'user' not in session:
             flash('Please login or register. 👋🏻')
@@ -197,7 +196,7 @@ def process_event_search():
     s_response = spotify.get_top_artists(access_token)
     artists = spotify.format_artist_data(s_response)
 
-    results = eventbrite.get_events(artists, city, distance)
+    results = eventbrite.search_batch_events(artists, city, distance)
 
     # TODO: where to add error code checking in general?
     # check for valid location input
@@ -208,30 +207,3 @@ def process_event_search():
         helper.add_events_db(results)
         helper.add_user_event_link(results)
         return jsonify(results)
-        # return render_template("event-results.html", events=results)
-
-
-# @app.route('/event-results', methods=['POST'])
-# def process_event_search():
-#     """Returns event search results from the Eventbrite API."""
-#
-#     city = request.form.get('city')
-#     distance = request.form.get('distance')
-#
-#     access_token = session['spotify_token']
-#     s_response = spotify.get_top_artists(access_token)
-#     artists = spotify.format_artist_data(s_response)
-#
-#     results = eventbrite.get_events(artists, city, distance)
-#
-#     # TODO: where to add error code checking in general?
-#     # check for valid location input
-#     if results == 'location invalid':
-#         flash('You entered an invalid location. Please try your search again.')
-#         return redirect('/event-search')
-#     else:
-#         helper.add_events_db(results)
-#         helper.add_user_event_link(results)
-#         return render_template("event-results.html", events=results)
-
-# https://realpython.com/the-model-view-controller-mvc-paradigm-summarized-with-legos/
