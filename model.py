@@ -75,8 +75,8 @@ class Event(db.Model):
 
     event_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
-    starts_at = db.Column(db.DateTime(timezone=False), nullable=False)
-    ends_at = db.Column(db.DateTime(timezone=False), nullable=False)
+    starts_at = db.Column(db.DateTime(timezone=True), nullable=False)
+    ends_at = db.Column(db.DateTime(timezone=True), nullable=False)
     venue = db.Column(db.String(150))
     address = db.Column(db.String(250))
     eventbrite_url = db.Column(db.String(250), nullable=False)
@@ -130,7 +130,7 @@ def test_data():
     user1 = User(username='user1', password='password', spotify_url='www.spotify.com', img='www.img.com')
 
     db.session.add(user1)
-    
+
     db.session.commit()
 
 
