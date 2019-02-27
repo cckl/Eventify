@@ -15,10 +15,7 @@ $('#event-search').on('submit', (evt) => {
 
   $.post('/event-search', formInputs, (results) => {
     console.log(results);
-    console.log(results.length)
-    if (results.length == 0) {
-      $('#event-results').append('<h4>Sorry, no events near you were found :(</h4>')
-    } else {
+    if (results) {
       $('#event-results').append('<h2>Events near you</h2>')
       for (let result of results) {
         $('<img>', {
@@ -48,14 +45,22 @@ $('#event-search').on('submit', (evt) => {
           href: result['url']
         }).appendTo('#event-results')
         $('#event-results').append('<br><br>')
+      }
+    } else {
+      $('#none-found').show()
     }
-        // $('#event-img').attr("src", result['img'])
-        // $('#event-name').html(result['name'])
-        // $('#event-description').html(result['description'])
-        // $('#event-date').html(`${result['starts_at']} -- ${result['ends_at']}`)
-        // $('#event-venue').html(`${result['venue']},\n${result['address']}`)
-        // $('#event-rsvp').attr("href", result['url'])
-        // $('#event-rsvp').text("RSVP on Eventbrite")
-      };
-    });
   });
+});
+
+$('#recommended-events').on('submit', (evt) => {
+  evt.preventDefault();
+
+  const formInputs = {
+    'city': $('#city').val(),
+    'distance': $('#distance').val()
+  };
+
+  $.post('/recommended', formInputs, (results) => {
+    console.log(results)
+  })
+})

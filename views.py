@@ -203,7 +203,27 @@ def process_event_search():
     if results == 'location invalid':
         flash('You entered an invalid location. Please try your search again.')
         return redirect('/event-search')
-    else:
+    elif results:
         helper.add_events_db(results)
         helper.add_user_event_link(results)
         return jsonify(results)
+    else:
+        return jsonify(results)
+
+
+@app.route('/recommended', methods=['POST'])
+def search_recommended_events():
+    """Returns recommended event search results from the Eventbrite API using Spotify related artists."""
+
+    city = request.form.get('city')
+    distance = request.form.get('distance')
+
+    access_token = session['spotify_token']
+    top_artists = spotify.get_top_artists(access_token)
+    artist_ids = spotify.get_artist_ids(top_artists)
+    related_artists = spotify.get_related_artists(artist_ids, access_token)
+
+    results = eventbrite.search_batch_events(related_artists, city, distance)
+
+    print(results)
+    return jsonify(results)

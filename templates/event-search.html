@@ -23,11 +23,24 @@
 <div id="loading" style="display:none"><h4>l o a d i n g... ~( *￣▽￣)σ </h4></div>
 <div id="loading2" style="display:none"><h4>〜(￣▽￣〜)(〜￣▽￣)〜</h4></div>
 <br>
-<div id="event-results">
-
+<div id="event-results"></div>
+<div id="none-found" style="display:none">
+  <h4>Sorry, no events near you were found :(</h4>
+  <h4>Would you like to search for recommended events?</h4>
+  <form id="recommended-events">
+    City:
+      <input type="text" name="city" id="city" value="San Francisco">
+      <br>
+    Within:
+      <select name="distance" id="distance">
+        <option value="5mi">5 miles</option>
+        <option value="10mi">10 miles</option>
+        <option value="25mi">25 miles</option>
+        <option selected value="50mi">50 miles</option>
+      </select>
+    <input type="submit">
+  </form>
 </div>
-
-
 
 
 

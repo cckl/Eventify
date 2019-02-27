@@ -27,7 +27,22 @@ def search_batch_events(artists, city, distance):
             'expand': 'venue'
         }
         url_args = '&'.join([f"{key}={urllib.parse.quote(val)}" for key, val in query_params.items()])
+        # url_args = urllib.parse.urlencode(query_params)
         url = f"/events/search?{url_args}"
+
+        # FIXME: not detecting umlaut words
+        # Ben+B%C3%B6hmer
+        # Ben%20B%C3%B6hmer
+        # Ben B\\u00f6hmer\
+        # Ben Böhmer
+        # if it's already getting passed in as % encoded, it's getting encoded twice...
+        # Ben%2BB%25C3%25B6hmer
+        # other words like B%C3%98JET Bøjet are fine...
+
+        # tried doing this, but then other chars like '&' mess it up
+        # url = f"/events/search?q={name}&{url_args}"
+        print('THIS IS THE URL')
+        print(url)
 
         req = {'method': 'GET', 'relative_url': url}
         req_payload.append(req)
@@ -66,11 +81,9 @@ def filter_events(artists, response):
     for match in initial_matches:
         for artist in artists:
             name = artist[1]
-            if name in match['name']['text']:
+            if name.lower() in match['name']['text'].lower():
                 filtered_events.append(match)
 
-    print('FILTERED EVENTS')
-    print(filtered_events)
     return filtered_events
 
 
