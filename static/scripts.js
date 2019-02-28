@@ -62,5 +62,40 @@ $('#recommended-events').on('submit', (evt) => {
 
   $.post('/recommended', formInputs, (results) => {
     console.log(results)
+    if (results) {
+      $('#recommended').append('<h2>Events near you</h2>')
+      for (let result of results) {
+        console.log(result)
+        $('<img>', {
+          id: 'event-img',
+          src: result['img'],
+          style: 'max-width: 500px'
+        }).appendTo('#recommended')
+        $('<div/>', {
+          id: 'event-name',
+          html: result['name']
+        }).appendTo('#recommended')
+        $('<div/>', {
+          id: 'event-description',
+          html: result['description']
+        }).appendTo('#recommended')
+        $('<div/>', {
+          id: 'event-date',
+          html: `${result['starts_at']} -- ${result['ends_at']}`
+        }).appendTo('#recommended')
+        $('<div/>', {
+          id: 'event-venue',
+          html: `${result['venue']},\n${result['address']}`
+        }).appendTo('#recommended')
+        $('<a/>', {
+          id: 'event-rsvp',
+          text: "RSVP on Eventbrite",
+          href: result['url']
+        }).appendTo('#recommended')
+        $('#recommended').append('<br><br>')
+      }
+    } else {
+      $('#none-found').show()
+    }
   })
 })
