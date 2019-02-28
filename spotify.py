@@ -24,7 +24,8 @@ def get_auth_url():
     }
     # https://christophergs.github.io/python/2016/12/03/python-urllib-parse/
     # https://github.com/yspark90/UniMuse/blob/master/UniMuse/spotify.py
-    url_args = '&'.join([f"{key}={urllib.parse.quote(val)}" for key, val in query_params.items()])
+    # url_args = '&'.join([f"{key}={urllib.parse.quote(val)}" for key, val in query_params.items()])
+    url_args = urllib.parse.urlencode(query_params)
     auth_url = f"{SPOTIFY_AUTHORIZATION_URL}/?{url_args}"
     return auth_url
 
@@ -58,9 +59,10 @@ def get_top_artists(access_token):
     # https://www.dataquest.io/blog/python-api-tutorial/
     query_params = {
         'time_range': 'medium_term',
-        'limit': '10'
+        'limit': '40',
+        'offset': '29'
     }
-    url_args = '&'.join([f"{key}={urllib.parse.quote(val)}" for key, val in query_params.items()])
+    url_args = urllib.parse.urlencode(query_params)
     url = f"{SPOTIFY_TOP_ARTISTS_ENDPOINT}/?{url_args}"
     headers = {"Authorization": f"Bearer {access_token}"}
     response = requests.get(url, headers=headers)

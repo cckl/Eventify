@@ -4,6 +4,7 @@ from datetime import datetime
 import json
 import os
 import urllib
+import re
 import requests
 
 from config import EVENTBRITE_APP_KEY, EVENTBRITE_CLIENT_SECRET, EVENTBRITE_OAUTH_TOKEN
@@ -17,6 +18,7 @@ def search_batch_events(artists, city, distance):
 
     req_payload = []
 
+    # creates URLs to add to the batched request
     for artist in artists:
         name = artist[1]
         query_params = {
@@ -26,33 +28,20 @@ def search_batch_events(artists, city, distance):
             'categories': '103',
             'expand': 'venue'
         }
-        url_args = '&'.join([f"{key}={urllib.parse.quote(val)}" for key, val in query_params.items()])
-        # url_args = urllib.parse.urlencode(query_params)
+        url_args = urllib.parse.urlencode(query_params)
         url = f"/events/search?{url_args}"
-
-        # FIXME: not detecting umlaut words
-        # Ben+B%C3%B6hmer
-        # Ben%20B%C3%B6hmer
-        # Ben B\\u00f6hmer\
-        # Ben Böhmer
-        # if it's already getting passed in as % encoded, it's getting encoded twice...
-        # Ben%2BB%25C3%25B6hmer
-        # other words like B%C3%98JET Bøjet are fine...
-
-        # tried doing this, but then other chars like '&' mess it up
-        # url = f"/events/search?q={name}&{url_args}"
         print('THIS IS THE URL')
         print(url)
-
         req = {'method': 'GET', 'relative_url': url}
         req_payload.append(req)
 
-    # FIXME: Non utf-8 chars are getting encoded in weird ways, so I don't get the res.
+    # converts batch to JSON for post request
     req_payload = json.dumps(req_payload)
     batch = {"batch": req_payload}
     headers = {'Authorization': f"Bearer {EVENTBRITE_OAUTH_TOKEN}"}
     response = requests.post(EVENTBRITE_BATCH_ENDPOINT, data=batch, headers=headers)
 
+    # handling of invalid location input
     if response.status_code == 400:
         if response.json()['error_detail']['ARGUMENTS_ERROR']['location.address'][0] == 'INVALID':
             return "location invalid"
@@ -80,9 +69,13 @@ def filter_events(artists, response):
 
     for match in initial_matches:
         for artist in artists:
-            name = artist[1]
-            if name.lower() in match['name']['text'].lower():
+            name = artist[1].lower()
+            title = match['name']['text'].lower()
+            # use regex to accurately check for name match in title
+            if re.search(r'\b{}(?!\w|[?\'.,!])\b'.format(name), title):
                 filtered_events.append(match)
+            # if name.lower() in match['name']['text'].lower():
+            #     filtered_events.append(match)
 
     return filtered_events
 
