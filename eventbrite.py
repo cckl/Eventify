@@ -14,7 +14,7 @@ EVENTBRITE_BATCH_ENDPOINT='https://www.eventbriteapi.com/v3/batch/'
 
 
 def search_batch_events(artists, city, distance):
-    """Searches events with a batched request to the Eventbrite API."""
+    """Search events with a batched request to the Eventbrite API and return a list of events."""
 
     req_payload = []
 
@@ -56,32 +56,36 @@ def search_batch_events(artists, city, distance):
 
 
 def filter_events(artists, response):
-    """Decodes JSON and filters Eventbrite event data for events with artist name in the title."""
+    """Decode JSON and filter Eventbrite event data for relevant events."""
 
-    initial_matches = []
-    filtered_events = []
+    # list comprehension versions of below loops
+    initial_matches = [event for r in response if json.loads(r['body'])['events'] for event in json.loads(r['body'])['events']]
 
-    for r in response:
-        decoded_events = json.loads(r['body'])
-        if decoded_events['events']:
-            for event in decoded_events['events']:
-                initial_matches.append(event)
+    initial_events = [match for match in initial_matches for artist in artists if re.search(r'\b{}(?!\w|[?\'.,!])\b'.format(artist[1].lower()), match['name']['text'].lower())]
 
-    for match in initial_matches:
-        for artist in artists:
-            name = artist[1].lower()
-            title = match['name']['text'].lower()
-            # use regex to accurately check for name match in title
-            if re.search(r'\b{}(?!\w|[?\'.,!])\b'.format(name), title):
-                filtered_events.append(match)
+    # for r in response:
+    #     decoded_events = json.loads(r['body'])
+    #     if decoded_events['events']:
+    #         for event in decoded_events['events']:
+    #             initial_matches.append(event)
+
+    # for match in initial_matches:
+    #     for artist in artists:
+    #         name = artist[1].lower()
+    #         title = match['name']['text'].lower()
+    #         # use regex to accurately check for name match in title
+    #         if re.search(r'\b{}(?!\w|[?\'.,!])\b'.format(name), title):
+    #             initial_events.append(match)
             # if name.lower() in match['name']['text'].lower():
             #     filtered_events.append(match)
+
+    filtered_events = [event for i, event in enumerate(initial_events) if event not in initial_events[i+1:]]
 
     return filtered_events
 
 
 def format_batch_events(filtered_events):
-    """Formats JSON data to store only necessary information."""
+    """Return a list of formatted event data."""
 
     formatted_events = []
 
