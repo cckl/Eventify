@@ -219,9 +219,7 @@ def search_recommended_events():
     distance = request.form.get('distance')
 
     access_token = session['access_token']
-    top_artists = spotify.get_top_artists(access_token)
-    artist_ids = spotify.get_artist_ids(top_artists)
-    related_artists = spotify.get_related_artists(artist_ids, access_token)
+    related_artists = spotify.get_related_artists(access_token)
 
     results = eventbrite.search_batch_events(related_artists, city, distance)
 

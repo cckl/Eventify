@@ -33,7 +33,7 @@ def get_auth_url():
 
 
 def get_access_token(request):
-    """Exchange Spotify authorization code for access token via POST request."""
+    """Return Spotify access token."""
 
     auth_code = request.args.get('code')
     payload = {
@@ -54,6 +54,24 @@ def get_access_token(request):
     response = requests.post(SPOTIFY_TOKEN_ENDPOINT, data=payload, headers=auth_header)
     print(response.json())
     return response.json()
+
+def refresh_token():
+    """Return new Spotify access token in exchange for referesh token."""
+
+    refresh_payload = {
+        'grant_type': 'refresh_token',
+        'refresh_token': session['refresh_token']
+    }
+
+    client_encoded_str = base64.b64encode(f"{SPOTIFY_CLIENT_ID}:{SPOTIFY_CLIENT_SECRET}".encode('ascii'))
+    refresh_auth_header = {"Authorization": f"Basic {client_encoded_str.decode('ascii')}"}
+
+    response = requests.post(SPOTIFY_TOKEN_ENDPOINT, data=refresh_payload, headers=refresh_auth_header)
+
+    response = response.json()
+    access_token = response['access_token']
+
+    return access_token
 
 
 def get_top_artists(access_token):
@@ -77,19 +95,7 @@ def get_top_artists(access_token):
         return artists
 
     elif response.status_code == 401:
-        refresh_payload = {
-            'grant_type': 'refresh_token',
-            'refresh_token': session['refresh_token']
-        }
-
-        client_encoded_str = base64.b64encode(f"{SPOTIFY_CLIENT_ID}:{SPOTIFY_CLIENT_SECRET}".encode('ascii'))
-        refresh_auth_header = {"Authorization": f"Basic {client_encoded_str.decode('ascii')}"}
-
-        response = requests.post(SPOTIFY_TOKEN_ENDPOINT, data=refresh_payload, headers=refresh_auth_header)
-
-        response = response.json()
-        access_token = response['access_token']
-
+        access_token = refresh_token()
         return get_top_artists(access_token)
 
 
@@ -100,36 +106,50 @@ def format_artist_data(response):
                 for index, item in enumerate(response['items'], 1)]
     return artists
 
+#
+# def get_artist_ids(top_artists):
+#     """Get IDs of top 40 Spotify artists."""
+#
+#     artist_ids = [(artist[1], artist[4]) for artist in top_artists]
+#     return artist_ids
 
-def get_artist_ids(top_artists):
-    """Get IDs of top 40 Spotify artists."""
 
-    artist_ids = [(artist[1], artist[4]) for artist in top_artists]
-    return artist_ids
-
-
-def get_related_artists(artist_ids, access_token):
+def get_related_artists(access_token):
     """Get related artists for top 40 Spotify artists."""
+
+    top_artists = get_top_artists(access_token)
+    # artist_ids = get_artist_ids(top_artists)
 
     related_artists = []
 
-    for artist in artist_ids:
+    for artist in top_artists:
         name = artist[0]
-        id = artist[1]
+        id = artist[4]
         url = f"{SPOTIFY_RELATED_ARTISTS_ENDPOINT}/{id}/related-artists"
         auth_header = {"Authorization": f"Bearer {access_token}"}
         response = requests.get(url, headers=auth_header)
+
+        if response.status_code == 200:
+            response = response.json()
+            filtered_artists = filter_related_artists(response)
+            related_artists.extend(filtered_artists)
+
+        elif response.status_code == 401:
+            access_token = refresh_token()
+            return get_related_artists(access_token)
 
     return related_artists
 
 
 def filter_related_artists(response):
-    """Limit related artists to 5 and clean up data."""
+    """Returns a list of 5 related artists with tuple-formatted name, id."""
 
     filtered_artists = []
+
     for i in range(0, 5):
         artist = response['artists'][i]
         filtered_artists.append((artist['id'], artist['name']))
+
     return filtered_artists
 
 
@@ -145,17 +165,5 @@ def get_user_profile(access_token):
         return response.json()
 
     elif response.status_code == 401:
-        refresh_payload = {
-            'grant_type': 'refresh_token',
-            'refresh_token': session['refresh_token']
-        }
-
-        client_encoded_str = base64.b64encode(f"{SPOTIFY_CLIENT_ID}:{SPOTIFY_CLIENT_SECRET}".encode('ascii'))
-        refresh_auth_header = {"Authorization": f"Basic {client_encoded_str.decode('ascii')}"}
-
-        response = requests.post(SPOTIFY_TOKEN_ENDPOINT, data=refresh_payload, headers=refresh_auth_header)
-
-        response = response.json()
-        access_token = response['access_token']
-
+        access_token = refresh_token()
         return get_user_profile(access_token)
