@@ -1,6 +1,31 @@
 // have the divs already created in my html file / template, but just hide them
 // TODO: how to dynamically create divs?
 
+// loading animations
+function loadingAnimationFade() {
+  $('#loading').animate({opacity: '0.2'}, 800);
+  $('#loading').animate({opacity: '1'}, 800, loadingAnimationFade);
+}
+
+function loadingAnimationSlide() {
+  $('#loading2').animate({'margin-right': '-=50px'}, 400);
+  $('#loading2').animate({'margin-left': '-=50px'}, 400, loadingAnimationSlide);
+}
+
+$(document).bind('ajaxSend', function() {
+  $('#loading').fadeIn(400).show();
+  $('#loading2').fadeIn(800).show();
+  loadingAnimationFade();
+  loadingAnimationSlide();
+});
+
+$(document).bind('ajaxComplete', function() {
+  $('#loading').hide();
+  $('#loading2').hide();
+});
+
+
+// event search with user artists
 $('#event-search').on('submit', (evt) => {
   evt.preventDefault();
 
@@ -8,10 +33,6 @@ $('#event-search').on('submit', (evt) => {
     'city': $('#city').val(),
     'distance': $('#distance').val()
   };
-
-  $('#loading').show().delay(800).slideUp(300).slideDown(400);
-  $('#loading2').fadeIn(400).show();
-
 
   $.post('/event-search', formInputs, (results) => {
     console.log(results);
@@ -41,8 +62,9 @@ $('#event-search').on('submit', (evt) => {
         }).appendTo('#event-results')
         $('<a/>', {
           id: 'event-rsvp',
-          text: "RSVP on Eventbrite",
-          href: result['url']
+          text: 'RSVP on Eventbrite',
+          href: result['url'],
+          target: '_blank'
         }).appendTo('#event-results')
         $('#event-results').append('<br><br>')
       }
@@ -50,10 +72,14 @@ $('#event-search').on('submit', (evt) => {
       $('#none-found').show()
     }
   });
+  $('#search-area').hide();
 });
 
+
+// event search with recommended events
 $('#recommended-events').on('submit', (evt) => {
   evt.preventDefault();
+  $('#none-found').hide();
 
   const formInputs = {
     'city': $('#city').val(),
@@ -89,13 +115,15 @@ $('#recommended-events').on('submit', (evt) => {
         }).appendTo('#recommended')
         $('<a/>', {
           id: 'event-rsvp',
-          text: "RSVP on Eventbrite",
-          href: result['url']
+          text: 'RSVP on Eventbrite',
+          href: result['url'],
+          target: '_blank'
         }).appendTo('#recommended')
         $('#recommended').append('<br><br>')
       }
     } else {
       $('#none-found').show()
     }
-  })
-})
+  });
+  $('#search-area2').hide();
+});

@@ -3,7 +3,7 @@
 {% block title %} Search for events {% endblock%}
 
 {% block content %}
-<div>
+<div id="search-area">
   <h2>Choose your city and distance</h2>
   <form id="event-search">
     City:
@@ -27,7 +27,7 @@
 <div id="none-found" style="display:none">
   <h4>Sorry, no events near you were found :(</h4>
 </div>
-<div id="recommended">
+<div id="search-area2">
   <h4>Would you like to search for recommended events?</h4>
   <form id="recommended-events">
     City:
@@ -43,6 +43,7 @@
     <input type="submit">
   </form>
 </div>
+<div id="recommended"></div>
 
 
 
