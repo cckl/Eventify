@@ -25,7 +25,7 @@ def show_homepage():
     session.clear()
 
     if 'user' in session:
-        if 'spotify_token' in session:
+        if 'access_token' in session:
             flash('You are already logged in to Spotify.')
             return redirect('/top-40')
         else:
@@ -40,7 +40,7 @@ def show_login():
     """Display user login page."""
 
     if 'user' in session:
-        if 'spotify_token' in session:
+        if 'access_token' in session:
             flash('You are already logged in to Spotify.')
             return redirect('/top-40')
         else:
@@ -79,7 +79,7 @@ def show_registration():
     """Display user registration page."""
 
     if 'user' in session:
-        if 'spotify_token' in session:
+        if 'access_token' in session:
             flash('You are already logged in to Spotify.')
             return redirect('/top-40')
         else:
@@ -114,6 +114,7 @@ def logout():
     """Logout user."""
 
     session.clear()
+    print(session)
 
     return redirect("/")
 
@@ -122,10 +123,11 @@ def logout():
 def get_top_40():
     """Display Spotify login."""
 
+    print(session)
     if 'user' not in session:
         flash('Please login or register 👋🏻')
         return redirect('/')
-    if 'spotify_token' in session:
+    if 'access_token' in session:
         flash('You are already logged in to Spotify.')
         return redirect('/top-40')
     else:
@@ -139,7 +141,8 @@ def authorize_spotify():
 
     response = spotify.get_access_token(request)
     flash("Succesfully logged into Spotify! 👾")
-    session['spotify_token'] = response['access_token']
+    session['access_token'] = response['access_token']
+    session['refresh_token'] = response['refresh_token']
 
     return redirect("/top-40")
 
@@ -148,8 +151,9 @@ def authorize_spotify():
 def show_top_40():
     """Display user's top 40 Spotify artists."""
 
+    print(session)
     # TODO: Add handling for when Sptify token expires
-    if 'spotify_token' not in session:
+    if 'access_token' not in session:
         if 'user' not in session:
             flash('Please login or register. 👋🏻')
             return redirect('/')
@@ -157,12 +161,11 @@ def show_top_40():
             flash('Please login to Spotify 🎧')
             return redirect('/get-top-40')
     else:
-        access_token = session['spotify_token']
+        access_token = session['access_token']
 
         # get user profile and artist info
         user_data = spotify.get_user_profile(access_token)
-        response = spotify.get_top_artists(access_token)
-        artists = spotify.format_artist_data(response)
+        artists = spotify.get_top_artists(access_token)
 
         # add new user's info to db
         username = session['user']
@@ -175,7 +178,7 @@ def show_top_40():
             helper.add_artist_db(access_token)
             helper.add_user_artist_link(access_token)
 
-        return render_template("top-40.html", artists=artists, all_data=response, user=user_data)
+        return render_template("top-40.html", artists=artists, user=user_data)
 
 
 @app.route('/event-search')
@@ -192,14 +195,11 @@ def process_event_search():
     city = request.form.get('city')
     distance = request.form.get('distance')
 
-    access_token = session['spotify_token']
-    s_response = spotify.get_top_artists(access_token)
-    artists = spotify.format_artist_data(s_response)
-
+    access_token = session['access_token']
+    artists = spotify.get_top_artists(access_token)
     results = eventbrite.search_batch_events(artists, city, distance)
 
-    # TODO: where to add error code checking in general?
-    # check for valid location input
+    # TODO: check for valid location input
     if results == 'location invalid':
         flash('You entered an invalid location. Please try your search again.')
         return redirect('/event-search')
@@ -218,12 +218,11 @@ def search_recommended_events():
     city = request.form.get('city')
     distance = request.form.get('distance')
 
-    access_token = session['spotify_token']
+    access_token = session['access_token']
     top_artists = spotify.get_top_artists(access_token)
     artist_ids = spotify.get_artist_ids(top_artists)
     related_artists = spotify.get_related_artists(artist_ids, access_token)
 
     results = eventbrite.search_batch_events(related_artists, city, distance)
 
-    print(results)
     return jsonify(results)

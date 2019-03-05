@@ -5,8 +5,10 @@
 {% block content %}
 
 <div class="header">
-  <img src="{{ user['images'][0]['url'] }}" alt="image for user['display_name']" style="border-radius: 50%; height: 150px; width: 150px">
-  Hello, <a href="{{ user['external_urls']['spotify'] }}">{{ user['display_name']}}</a>! |
+  {% if user['images'] %}
+    <img src="{{ user['images'][0]['url'] }}" alt="image for user['display_name']" style="border-radius: 50%; height: 150px; width: 150px">
+  {% endif %}
+  Hello, <a href="{{ user['external_urls']['spotify'] }}" target="_blank">{{ user['display_name']}}</a>! |
   <a href="/logout">logout</a>
   <br><br>
 </div>
@@ -16,11 +18,11 @@
   <h2>Your top 40 Spotify artists in the last 6 months:</h2>
 
   <!-- unpack artist data -->
-  {% for index, artist, url, img in artists %}
+  {% for index, artist, url, img, id in artists %}
   <div style="display: inline-block; ">
     <span><img src="{{ img }}" style="padding: 0.5em 1em 0 1em; border-radius: 50%; height: 100px; width: 100px" alt="Spotify profile image of {{ artist }}"></span>
     <br>
-    <span>{{ index }}. <a href="{{ url}}">{{ artist }}</a></span>
+    <span>{{ index }}. <a href="{{ url}}" target="_blank">{{ artist }}</a></span>
   </div>
   {% endfor %}
   <br><br>
