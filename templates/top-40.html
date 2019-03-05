@@ -7,6 +7,8 @@
 <div class="header">
   {% if user['images'] %}
     <img src="{{ user['images'][0]['url'] }}" alt="image for user['display_name']" style="border-radius: 50%; height: 150px; width: 150px">
+  {% else %}
+    <img src="https://eventify.sfo2.digitaloceanspaces.com/blush.jpg" alt="Default display image" style="border-radius: 50%; height: 150px; width: 150px">
   {% endif %}
   Hello, <a href="{{ user['external_urls']['spotify'] }}" target="_blank">{{ user['display_name']}}</a>! |
   <a href="/logout">logout</a>
