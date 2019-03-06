@@ -1,6 +1,3 @@
-// have the divs already created in my html file / template, but just hide them
-// TODO: how to dynamically create divs?
-
 // loading animations
 function loadingAnimationFade() {
   $('#loading').animate({opacity: '0.2'}, 800);
@@ -44,13 +41,9 @@ $('#event-search').on('submit', (evt) => {
           src: result['img'],
           style: 'max-width: 500px'
         }).appendTo('#event-results')
-        $('<div/>', {
+        $('<h4/>', {
           id: 'event-name',
           html: result['name']
-        }).appendTo('#event-results')
-        $('<div/>', {
-          id: 'event-description',
-          html: result['description']
         }).appendTo('#event-results')
         $('<div/>', {
           id: 'event-date',
@@ -89,37 +82,33 @@ $('#recommended-events').on('submit', (evt) => {
   $.post('/recommended', formInputs, (results) => {
     console.log(results)
     if (results) {
-      $('#recommended').append('<h2>Events near you</h2>')
+      $('#event-results').append('<h2>You might like</h2>')
       for (let result of results) {
         console.log(result)
         $('<img>', {
           id: 'event-img',
           src: result['img'],
           style: 'max-width: 500px'
-        }).appendTo('#recommended')
-        $('<div/>', {
+        }).appendTo('#event-results')
+        $('<h4/>', {
           id: 'event-name',
           html: result['name']
-        }).appendTo('#recommended')
-        $('<div/>', {
-          id: 'event-description',
-          html: result['description']
-        }).appendTo('#recommended')
+        }).appendTo('#event-results')
         $('<div/>', {
           id: 'event-date',
           html: `${result['starts_at']} -- ${result['ends_at']}`
-        }).appendTo('#recommended')
+        }).appendTo('#event-results')
         $('<div/>', {
           id: 'event-venue',
           html: `${result['venue']},\n${result['address']}`
-        }).appendTo('#recommended')
+        }).appendTo('#event-results')
         $('<a/>', {
           id: 'event-rsvp',
           text: 'RSVP on Eventbrite',
           href: result['url'],
           target: '_blank'
-        }).appendTo('#recommended')
-        $('#recommended').append('<br><br>')
+        }).appendTo('#event-results')
+        $('#event-results').append('<br><br>')
       }
     } else {
       $('#none-found').show()
@@ -127,3 +116,10 @@ $('#recommended-events').on('submit', (evt) => {
   });
   $('#search-area2').hide();
 });
+
+
+$('#search-again').on('click', () => {
+  $('#event-results').empty()
+  $('#search-area').show()
+  $('#search-area2').show()
+})

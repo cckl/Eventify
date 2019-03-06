@@ -6,9 +6,9 @@
 
 <div class="header">
   {% if user['images'] %}
-    <img src="{{ user['images'][0]['url'] }}" alt="image for user['display_name']" style="border-radius: 50%; height: 150px; width: 150px">
+    <img src="{{ user['images'][0]['url'] }}" alt="image for user['display_name']" style="border-radius: 50%; height: 100px; width: 100px">
   {% else %}
-    <img src="https://eventify.sfo2.digitaloceanspaces.com/blush.jpg" alt="Default display image" style="border-radius: 50%; height: 150px; width: 150px">
+    <img src="https://eventify.sfo2.digitaloceanspaces.com/blush.jpg" alt="Default display image" style="border-radius: 50%; height: 100px; width: 100x">
   {% endif %}
   Hello, <a href="{{ user['external_urls']['spotify'] }}" target="_blank">{{ user['display_name']}}</a>! |
   <a href="/logout">logout</a>
@@ -22,7 +22,7 @@
   <!-- unpack artist data -->
   {% for index, artist, url, img, id in artists %}
   <div style="display: inline-block; ">
-    <span><img src="{{ img }}" style="padding: 0.5em 1em 0 1em; border-radius: 50%; height: 100px; width: 100px" alt="Spotify profile image of {{ artist }}"></span>
+    <span><img src="{{ img }}" style="padding: 0.5em 1em 0 1em; border-radius: 50%; height: 80px; width: 80px" alt="Spotify profile image of {{ artist }}"></span>
     <br>
     <span>{{ index }}. <a href="{{ url}}" target="_blank">{{ artist }}</a></span>
   </div>
@@ -33,9 +33,53 @@
 <hr>
 
 <div>
-  <h2><a href="/event-search">Search for events</a></h2>
+  <h2>Search for events</h2>
+  <div id="search-area">
+    <h2>Choose your city and distance</h2>
+    <form id="event-search">
+      City:
+        <input type="text" name="city" id="city" value="San Francisco">
+        <br>
+      Within:
+        <select name="distance" id="distance">
+          <option value="5mi">5 miles</option>
+          <option value="10mi">10 miles</option>
+          <option value="25mi">25 miles</option>
+          <option selected value="50mi">50 miles</option>
+        </select>
+      <input type="submit">
+    </form>
+  </div>
+
+  <div id="loading" style="display:none"><h4>l o a d i n g... ~( *￣▽￣)σ </h4></div>
+  <div id="loading2" style="display:none"><h4>〜(￣▽￣〜)(〜￣▽￣)〜</h4></div>
+
+  <div id="event-results"></div>
+
+  <div id="none-found" style="display:none">
+    <h4>Sorry, no events near you were found :(</h4>
+  </div>
+
+  <div id="search-area2">
+    <h4>Would you like to search for recommended events?</h4>
+    <form id="recommended-events">
+      City:
+        <input type="text" name="city" id="city" value="San Francisco">
+        <br>
+      Within:
+        <select name="distance" id="distance">
+          <option value="5mi">5 miles</option>
+          <option value="10mi">10 miles</option>
+          <option value="25mi">25 miles</option>
+          <option selected value="50mi">50 miles</option>
+        </select>
+      <input type="submit">
+    </form>
+  </div>
+  <div id="recommended"></div>
 </div>
 
+<h3 id="search-again"><a href="#">Try another search</a></h3>
 
 
 {% endblock %}
