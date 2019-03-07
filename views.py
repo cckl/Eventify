@@ -29,7 +29,8 @@ def login_required(f):
             return redirect(url_for('show_homepage'))
     return wrap
 
-
+# make more expressive: redirect_if_logged_in
+# or logout_required
 def logged_in(f):
     @wraps(f)
     def wrap(*args, **kwargs):
@@ -167,6 +168,11 @@ def show_top_40():
     # after classes encapsulate instantiation, can create function "add user"
     # should extract the user/artist creation process to another filter_events
     # 'if': can this be extracted
+
+    # pull out user from db and keep the object saved to variable
+    # otherwise constantly querying db for user object
+
+    # session is best kept at the view level -- might backfire in testing
     if helper.check_spotify_not_in_db(username):
         helper.add_user_spotify_db(access_token)
         helper.add_artist_db(access_token)
@@ -175,18 +181,9 @@ def show_top_40():
     return render_template("top-40.html", artists=artists, user=user_data)
 
 
-@app.route('/event-search')
-@login_required
-@spotify_login_required
-def search_events():
-    """Search for events using the Eventbrite API."""
-
-    return render_template("event-search.html")
-
-
 @app.route('/event-search', methods=['POST'])
 def process_event_search():
-    """Returns event search results from the Eventbrite API."""
+    """Return event search results from the Eventbrite API."""
 
     city = request.form.get('city')
     distance = request.form.get('distance')
@@ -209,7 +206,7 @@ def process_event_search():
 
 @app.route('/recommended', methods=['POST'])
 def search_recommended_events():
-    """Returns recommended event search results from the Eventbrite API using Spotify related artists."""
+    """Return recommended event search results from the Eventbrite API using Spotify related artists."""
 
     city = request.form.get('city')
     distance = request.form.get('distance')
@@ -219,3 +216,12 @@ def search_recommended_events():
     results = eventbrite.search_batch_events(related_artists, city, distance)
 
     return jsonify(results)
+
+
+@app.route('/explore')
+@login_required
+@spotify_login_required
+def explore():
+    """Display explore page with other user info."""
+
+    return render_template("explore.html")
