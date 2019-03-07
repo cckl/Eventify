@@ -224,4 +224,16 @@ def search_recommended_events():
 def explore():
     """Display explore page with other user info."""
 
-    return render_template("explore.html")
+    all_users = User.query.all()
+    users = []
+    users_artists = {}
+
+    for user in all_users:
+        if user.username != session['user']:
+            users.append((user.username, user.spotify_url, user.img))
+            user_artists = []
+            for artist in user.artists:
+                user_artists.append((artist.name, artist.spotify_url, artist.img))
+            users_artists[user.username] = user_artists
+
+    return render_template("explore.html", users=users, artists=users_artists)
