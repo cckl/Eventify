@@ -1,0 +1,10 @@
+.user-img {
+  border-radius: 50%;
+  height: 200px;
+  width: 200px;
+  margin: 2em;
+}
+
+.event-img {
+  max-width: 350px;
+}

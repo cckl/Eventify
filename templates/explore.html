@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'user-area.html' %}
 
 {% block title %} Explore | Eventify {% endblock%}
 
@@ -13,19 +13,20 @@
     {% else %}
       <img src="https://eventify.sfo2.digitaloceanspaces.com/blush.jpg" alt="Default display image" style="border-radius: 50%; height: 100px; width: 100x">
     {% endif %}
-    <a href="{{ user[1] }}">{{ user[0] }}</a>
+      <a href="{{ user[1] }}">{{ user[0] }}</a>
     {% for artist in artists[user[0]] %}
 
-    <div style="display: inline-block; padding: 0.2em;">
+    <div style="display: inline-block; padding: 0.1em;">
       <div style="height: 50px; width: 50px; position: relative; overflow: hidden; border-radius: 50%;  margin: auto">
         <img src="{{ artist[2] }}" style="object-fit: cover; width: 100%; height: 100%" alt="Spotify profile image of {{ artist[0] }}">
       </div>
       <br>
       <span><a href="{{ artist[1] }}" target="_blank">{{ artist[0] }}</a></span>
     </div>
-
     {% endfor %}
   </div>
+  <hr>
+
   {% endfor %}
 
 {% endblock %}
