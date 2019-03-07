@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %} See your Spotify Top 40 {% endblock%}
+{% block title %} Login to Spotify | Eventify {% endblock%}
 
 {% block content %}
 
-  <h1>See your top 40 artists on Spotify!</h1>
+  <h1>One more step.</h1>
+  <p>To start searching for events with your top Spotify artists, we'll need you to login and grant the application access to your user profile info.</p>
     <a href="{{ spotify_auth_url }}">Login to Spotify</a>
 
 {% endblock %}

@@ -3,15 +3,19 @@
 <head>
     <meta charset="utf-8">
     <title>{% block title %} Title here {% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 <body style="text-align: center">
     {% for message in get_flashed_messages() %}
         {{ message }}
     {% endfor %}
-
     <br>
-
+    <div>
     {% block content %} put content here {% endblock %}
+    </div>
 
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="/static/scripts.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 </body>
 </html>
