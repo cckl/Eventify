@@ -17,8 +17,8 @@ $(document).bind('ajaxSend', function() {
 });
 
 $(document).bind('ajaxComplete', function() {
-  $('#loading').hide();
-  $('#loading2').hide();
+  $('#loading').empty();
+  $('#loading2').empty();
 });
 
 
@@ -34,32 +34,27 @@ $('#event-search').on('submit', (evt) => {
   $.post('/event-search', formInputs, (results) => {
     console.log(results);
     if (results) {
-      $('#event-results').append('<h2>Events near you</h2>')
+      $('#event-header').html('<h2>Events near you</h2><br>')
       for (let result of results) {
-        $('<img>', {
-          id: 'event-img',
-          src: result['img'],
-          style: 'max-width: 500px'
-        }).appendTo('#event-results')
-        $('<h4/>', {
-          id: 'event-name',
-          html: result['name']
-        }).appendTo('#event-results')
-        $('<div/>', {
-          id: 'event-date',
-          html: `${result['starts_at']} -- ${result['ends_at']}`
-        }).appendTo('#event-results')
-        $('<div/>', {
-          id: 'event-venue',
-          html: `${result['venue']},\n${result['address']}`
-        }).appendTo('#event-results')
-        $('<a/>', {
-          id: 'event-rsvp',
-          text: 'RSVP on Eventbrite',
-          href: result['url'],
-          target: '_blank'
-        }).appendTo('#event-results')
-        $('#event-results').append('<br><br>')
+        $('#event-results').append(`
+          <div class="event-div" id="orange-bg">
+              <div class="rect-img img-fluid">
+                <img class="event-img" src="${result['img']}">
+              </div>
+              <div class="event-text">
+                <div class="row">
+                  <div class="col-4">
+                    <p>${result['starts_at']}</p>
+                  </div>
+                  <div class="col-8">
+                    <h4>${result['name']}</h4>
+                    <p>${result['venue']}</p>
+                    <a class="btn btn-info" href="${result['url']}" target="_blank">RSVP on Eventbrite</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `)
       }
     } else {
       $('#none-found').show()
@@ -84,31 +79,25 @@ $('#recommended-events').on('submit', (evt) => {
     if (results) {
       $('#event-results').append('<h2>You might like</h2>')
       for (let result of results) {
-        console.log(result)
-        $('<img>', {
-          id: 'event-img',
-          src: result['img'],
-          style: 'max-width: 500px'
-        }).appendTo('#event-results')
-        $('<h4/>', {
-          id: 'event-name',
-          html: result['name']
-        }).appendTo('#event-results')
-        $('<div/>', {
-          id: 'event-date',
-          html: `${result['starts_at']} -- ${result['ends_at']}`
-        }).appendTo('#event-results')
-        $('<div/>', {
-          id: 'event-venue',
-          html: `${result['venue']},\n${result['address']}`
-        }).appendTo('#event-results')
-        $('<a/>', {
-          id: 'event-rsvp',
-          text: 'RSVP on Eventbrite',
-          href: result['url'],
-          target: '_blank'
-        }).appendTo('#event-results')
-        $('#event-results').append('<br><br>')
+        $('#event-results').append(`
+          <div class="event-div">
+              <div class="rect-img img-fluid">
+                <img class="event-img" src="${result['img']}">
+              </div>
+              <div class="event-text">
+                <div class="row">
+                  <div class="col-4">
+                    <p>${result['starts_at']}</p>
+                  </div>
+                  <div class="col-8">
+                    <h4>${result['name']}</h4>
+                    <p>${result['venue']}</p>
+                    <a class="btn btn-info" href="${result['url']}" target="_blank">RSVP on Eventbrite</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `)
       }
     } else {
       $('#none-found').show()

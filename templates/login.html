@@ -4,14 +4,19 @@
 
 {% block content %}
 
-<h2>Login to your account</h2>
+<div class="login-register">
 
-<form action="/login" method="POST">
-  Username: <input type="text" name="username" required>
-  <br>
-  Password: <input type="password" name="password" required>
-  <br>
-  <input type="submit">
-</form>
+  <h2>Login to your account</h2>
+
+  <form action="/login" method="POST">
+    Username: <input type="text" name="username" required>
+    <br>
+    Password: <input type="password" name="password" required>
+    <br>
+    <input type="submit" class="btn btn-dark">
+  </form>
+
+</div>
+
 
 {% endblock %}

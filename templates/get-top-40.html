@@ -4,8 +4,11 @@
 
 {% block content %}
 
+<div class="login-register">
+
   <h1>One more step.</h1>
   <p>To start searching for events with your top Spotify artists, we'll need you to login and grant the application access to your user profile info.</p>
-    <a href="{{ spotify_auth_url }}">Login to Spotify</a>
+    <a href="{{ spotify_auth_url }}" class="btn btn-dark">Login to Spotify</a>
+</div>
 
 {% endblock %}

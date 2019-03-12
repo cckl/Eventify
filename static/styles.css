@@ -1,10 +1,196 @@
+/* COLORS
+
+rgb(2, 52, 154)
+rgb(2, 138, 188)
+rgb(13, 90, 168)
+rgb(166, 220, 234)
+rgb(153, 61, 217)
+ */
+
+body, html {
+  height: 100%;
+  font-family: Didact Gothic, 'sans-serif';
+}
+
+.main-bg {
+  background-color: rgb(27, 26, 27, 0.3) !important;
+  background-image: url('https://eventify.sfo2.digitaloceanspaces.com/maryna-yazbeck-1389580-unsplash%20(1).jpg');
+  background-repeat: no-repeat;
+  height: 100%;
+  background-size: cover;
+  background-blend-mode: multiply;
+  height: 100%;
+}
+
+
+.base-body {
+  text-align: center;
+}
+
+.welcome {
+  /* width: 20em;
+  height: 20em;
+  background-color: rgb(255, 255, 255, 0.92);
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20em;
+  padding: 3em;
+  border: 4px solid black; */
+}
+
+.home-right {
+  background-color: rgb(255, 255, 255);
+  padding: 0;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.login-register {
+  top: 50%;
+  position: relative;
+  transform: translateY(-50%);
+}
+
+
+#title {
+  font: 700 6vw 'Cabin', sans-serif;
+  position: relative;
+  text-align: center;
+  margin-top: 2.5em;
+  margin-bottom: 2em;
+  color: white;
+  letter-spacing: -0.02em;
+  /* text-shadow: 1px 1px 5px rgb(3, 9, 99); */
+}
+
+h4 {
+  font-size: 1.2em;
+}
+
+
+/* h1:after {
+  content: 'Eventify';
+  position: absolute;
+  left: 2.82em;
+  top: 0.03em;
+  font: 700 1em 'Sarabun', sans-serif;
+  color: rgb(255, 255, 255, 0.98);
+  color: rgb(249, 180, 238, 0.8);
+
+} */
+
+a {
+  color: #000;
+}
+
+h2 {
+  font-weight: 700;
+}
+
+.container-fluid {
+  padding: 0;
+  /* background-color: rgb(236, 227, 245); */
+}
+
+.col-4 {
+  /* color: white!important; */
+}
+
+.col-6 {
+  padding: 0;
+}
+
+#user-info {
+padding: 1em;
+  /* background-color: rgb(185, 202, 251); */
+/* background-color: rgb(194, 245, 203); */
+  /* background-color: rgb(78, 45, 128); */
+}
+
 .user-img {
   border-radius: 50%;
-  height: 200px;
-  width: 200px;
+  max-height: 10em;
+  max-width: 10em;
   margin: 2em;
 }
 
+
+#event-search-area {
+  /* background: linear-gradient(4deg, rgb(231, 175, 91) 270px,#fff 0); */
+  padding: 1em;
+  /* color: white; */
+}
+
+#blue-bg {
+  background: linear-gradient(175deg, rgb(74, 93, 221) 270px,#fff 0);
+}
+
+#orange-bg {
+  background: linear-gradient(105deg, rgb(240, 183, 124) 270px,#fff 0);
+
+}
+
+#top40-title {
+  color: white;
+}
+
+.artists-div {
+  padding: 1em 0;
+}
+
+.artist-div {
+  width: 6em;
+}
+
+.artist-img {
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  height: 100%;
+}
+
+.round-img {
+  height: 5em;
+  width: 5em;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+  margin: auto;
+}
+
+.rect-img {
+  height: 18em;
+  width: 33em;
+  position: relative;
+  overflow: hidden;
+  margin: auto;
+}
+
+.event-div {
+  width: 33%;
+  margin-bottom: 1em;
+  text-align: left;
+  padding: 0;
+}
+
+.event-text {
+  padding: 1em;
+}
+
 .event-img {
-  max-width: 350px;
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  height: 100%;
+}
+
+p {
+  margin: 0!important;
+}
+
+.py-2em {
+  padding-top: 2em;
+  pading-bottom: 2em;
 }

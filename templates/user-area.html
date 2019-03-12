@@ -5,12 +5,13 @@
     <title>{% block title %} Title here {% endblock %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Cabin|Poppins|Yeseva+One|Didact+Gothic" rel="stylesheet">
 </head>
 <body>
     {% for message in get_flashed_messages() %}
         {{ message }}
     {% endfor %}
-    <nav class="navbar sticky-top navbar-dark bg-dark mb-3">
+    <nav class="navbar sticky-top navbar-dark bg-dark">
       <a class="navbar-brand" href="#">Eventify</a>
       <div class="justify-content-end">
         <a href="/top-40">Home | </a>
