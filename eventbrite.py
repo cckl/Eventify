@@ -93,6 +93,11 @@ def format_batch_events(filtered_events):
         address = f"{event['venue']['address']['address_1']}, {event['venue']['address']['city']}, {event['venue']['address']['region']}, {event['venue']['address']['postal_code']}"
         iso_starts_at = event['start']['utc']
         iso_ends_at = event['end']['utc']
+        if not event['logo']:
+            continue
+
+        print('\n\n\nEVENT INFO')
+        print(event)
 
         # https://stackoverflow.com/questions/4770297/convert-utc-datetime-string-to-local-datetime-with-python
         # https://docs.python.org/2/library/datetime.html
@@ -109,3 +114,11 @@ def format_batch_events(filtered_events):
         formatted_events.append(formatted_event)
 
     return formatted_events
+
+# doing local time
+# first, need to know user's preferred timezone
+# use JS to fetch this information (preferred)
+# fetch what browser preferences are and render on the frontend
+# can also get this information from city, see if external api or library has this infomration
+
+# set user preference on backend
