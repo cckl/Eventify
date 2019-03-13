@@ -13,10 +13,6 @@ from model import User, Artist, Event, UserArtistLink, UserEventLink
 from model import connect_to_db, db
 import spotify
 
-# TODO: Check for user login through authentication, not just sessions
-# TODO: Input validation for all forms
-# http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/
-
 
 def login_required(f):
     @wraps(f)
@@ -29,9 +25,8 @@ def login_required(f):
             return redirect(url_for('show_homepage'))
     return wrap
 
-# make more expressive: redirect_if_logged_in
-# or logout_required
-def logged_in(f):
+
+def logout_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
         if 'logged_in' in session:
@@ -55,7 +50,7 @@ def spotify_login_required(f):
 
 
 @app.route('/')
-@logged_in
+@logout_required
 def show_homepage():
     """Display homepage."""
 
@@ -63,7 +58,7 @@ def show_homepage():
 
 
 @app.route('/login')
-@logged_in
+@logout_required
 def show_login():
     """Display user login page."""
 
@@ -94,7 +89,7 @@ def process_login():
 
 
 @app.route('/register')
-@logged_in
+@logout_required
 def show_registration():
     """Display user registration page."""
 
