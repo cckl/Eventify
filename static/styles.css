@@ -127,10 +127,13 @@ padding: 1em;
   background: linear-gradient(175deg, rgb(74, 93, 221) 270px,#fff 0);
 }
 
-#orange-bg {
-  background: linear-gradient(105deg, rgb(240, 183, 124) 270px,#fff 0);
-
+#orange-bg-wide {
+  background: linear-gradient(184deg, rgb(240, 183, 124) 300px,#fff 0);
 }
+
+/* #orange-bg {
+  background: linear-gradient(105deg, rgb(240, 183, 124) 240px,#fff 0);
+} */
 
 #top40-title {
   color: white;
@@ -143,6 +146,22 @@ padding: 1em;
 .artist-div {
   width: 6em;
 }
+
+.small-round-img {
+  height: 4em;
+  width: 4em;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+  margin: auto
+}
+
+/* .artist-div::before {
+  counter-increment: artist;
+  content: counter(artist)".";
+  color: purple;
+  font-size: 2em;
+} */
 
 .artist-img {
   object-fit: cover;
@@ -192,5 +211,13 @@ p {
 
 .py-2em {
   padding-top: 2em;
-  pading-bottom: 2em;
+  padding-bottom: 2em!important;
+}
+
+.pl-2em {
+  padding-left: 4em;
+}
+
+.pr-2em {
+  padding-right: 1em;
 }

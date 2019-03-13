@@ -6,7 +6,7 @@
 <div class="container-fluid text-center px-6 ">
   <div class="row" id="blue-bg">
 
-    <div class="col-4 py-2em">
+    <div class="col-3 py-2em pl-2em">
       <div id="user-info">
         {% if user['images'] %}
           <img class="user-img" src="{{ user['images'][0]['url'] }}" alt="image for user['display_name']">
@@ -17,48 +17,10 @@
           Hey, <a href="{{ user['external_urls']['spotify'] }}" target="_blank">{{ user['display_name']}}</a>!
         </h2>
       </div>
-      <div id="event-search-area">
-        <h2>Search for events</h2>
-        <div id="search-area">
-          <h3>Choose your city and distance</h3>
-          <form id="event-search">
-            <div>
-              City:
-              <input type="text" name="city" id="city" value="San Francisco">
-              Within:
-                <select name="distance" id="distance">
-                  <option value="5mi">5 miles</option>
-                  <option value="10mi">10 miles</option>
-                  <option value="25mi">25 miles</option>
-                  <option selected value="50mi">50 miles</option>
-                </select>
-              </div>
-            <input type="submit" class="btn btn-primary my-2">
-          </form>
-        </div>
 
-        <div id="search-area2">
-          <h4>Would you like to search for recommended events?</h4>
-          <form id="recommended-events">
-            City:
-              <input type="text" name="city" id="city" value="San Francisco">
-            Within:
-              <select name="distance" id="distance">
-                <option value="5mi">5 miles</option>
-                <option value="10mi">10 miles</option>
-                <option value="25mi">25 miles</option>
-                <option selected value="50mi">50 miles</option>
-              </select>
-            <input type="submit" class="btn btn-primary my-2">
-          </form>
-        </div>
-        <a href="#" id="search-again" class="btn btn-primary my-2" style="display: none">Try another search</a>
-        <div id="loading" style="display:none"><h4>l o a d i n g... ~( *￣▽￣)σ </h4></div>
-        <div id="loading2" style="display:none"><h4>〜(￣▽￣〜)(〜￣▽￣)〜</h4></div>
-      </div>
     </div>
 
-    <div class="col-8 py-2em">
+    <div class="col-9 py-2em">
       <div id="top40-title">
         <h1 id=""><b>Your Heavy Rotation<b></h1>
         <p>Top 40 Spotify artists in the last 6 months</p>
@@ -81,7 +43,60 @@
   </div>
 </div>
 
-<div class="container-fluid text-center px-6 py-6"">
+<div class="container-fluid text-center px-6 py-2em" id="orange-bg-wide">
+
+  <div id="event-search-area">
+    <div class="row">
+      <div class="col-3 pl-2em">
+        <h2><b>Search for events</b></h2>
+      </div>
+      <div class="col-9">
+        <div id="search-area">
+          <!-- <h3>Choose your city and distance</h3> -->
+          <form id="event-search">
+            <div>
+              I'm looking for shows in...
+              <input type="text" name="city" id="city" value="San Francisco">
+            </div>
+            <div>
+              Within:
+                <select name="distance" id="distance">
+                  <option value="5mi">5 miles</option>
+                  <option value="10mi">10 miles</option>
+                  <option value="25mi">25 miles</option>
+                  <option selected value="50mi">50 miles</option>
+                </select>
+                <input type="submit" class="btn btn-primary my-2">
+              </div>
+          </form>
+        </div>
+
+        <!-- <div id="search-area2">
+          <h4>Would you like to search for recommended events?</h4>
+          <form id="recommended-events">
+            City:
+              <input type="text" name="city" id="city" value="San Francisco">
+            Within:
+              <select name="distance" id="distance">
+                <option value="5mi">5 miles</option>
+                <option value="10mi">10 miles</option>
+                <option value="25mi">25 miles</option>
+                <option selected value="50mi">50 miles</option>
+              </select>
+            <input type="submit" class="btn btn-primary my-2">
+          </form>
+        </div> -->
+
+        <a href="#" id="search-again" class="btn btn-primary my-2" style="display: none">Try another search</a>
+        <div id="loading" style="display:none"><h4>l o a d i n g... ~( *￣▽￣)σ </h4></div>
+        <div id="loading2" style="display:none"><h4>〜(￣▽￣〜)(〜￣▽￣)〜</h4></div>
+        </div>
+
+      </div>
+    </div>
+
+
+
       <h2 id="event-header"></h2>
       <div id="event-results" class="d-inline-flex flex-wrap justify-content-center">
 
