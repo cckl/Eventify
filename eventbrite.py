@@ -47,18 +47,27 @@ def search_batch_events(artists, city, distance):
     # check validity of responses
     for r in response:
         body = json.loads(r['body'])
-        if body['status_code'] == 400:
+        # print(body)
+        if body.get('status_code') == 400:
             return results
+        else:
+            break
+
+    print('HERE')
 
     filtered_events = filter_events(artists, response)
     if filtered_events:
         formatted_events = format_batch_events(filtered_events)
         results.extend(formatted_events)
         return results
+    else:
+        return results
 
 
 def filter_events(artists, response):
     """Decode JSON and filter Eventbrite event data for relevant events."""
+
+    print('HERE2')
 
     # list comprehension versions of below loops
     initial_matches = [event for r in response if json.loads(r['body'])['events'] for event in json.loads(r['body'])['events']]
@@ -83,11 +92,15 @@ def filter_events(artists, response):
 
     filtered_events = [event for i, event in enumerate(initial_events) if event not in initial_events[i+1:]]
 
+    print('HERE3')
+
     return filtered_events
 
 
 def format_batch_events(filtered_events):
     """Return a list of formatted event data."""
+
+    print('HERE4')
 
     formatted_events = []
 
@@ -111,6 +124,8 @@ def format_batch_events(filtered_events):
             'img': event['logo']['original']['url']
             }
         formatted_events.append(formatted_event)
+
+    print('HERE5')
 
     return formatted_events
 
