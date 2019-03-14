@@ -11,12 +11,12 @@
     {% for message in get_flashed_messages() %}
         {{ message }}
     {% endfor %}
-    <nav class="navbar sticky-top navbar-dark bg-dark">
+    <nav class="navbar sticky-top navbar-dark bg-dark ">
       <a class="navbar-brand" href="#">Eventify</a>
       <div class="justify-content-end">
-        <a href="/top-40">Home | </a>
-        <a href="/explore">Explore | </a>
-        <a href="/logout">Logout</a>
+        <a class="text-white px-1" href="/top-40">Home  </a>
+        <a class="text-white px-1" href="/explore">Explore  </a>
+        <a class="text-white px-1" href="/logout">Logout  </a>
       </div>
     </nav>
 
