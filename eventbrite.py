@@ -41,18 +41,20 @@ def search_batch_events(artists, city, distance):
     headers = {'Authorization': f"Bearer {EVENTBRITE_OAUTH_TOKEN}"}
     response = requests.post(EVENTBRITE_BATCH_ENDPOINT, data=batch, headers=headers)
 
-    # handling of invalid location input
-    if response.status_code == 400:
-        if response.json()['error_detail']['ARGUMENTS_ERROR']['location.address'][0] == 'INVALID':
-            return "location invalid"
-    elif response.status_code == 200:
-        results = []
-        response = response.json()
-        filtered_events = filter_events(artists, response)
-        if filtered_events:
-            formatted_events = format_batch_events(filtered_events)
-            results.extend(formatted_events)
+    results = []
+    response = response.json()
+
+    # check validity of responses
+    for r in response:
+        body = json.loads(r['body'])
+        if body['status_code'] == 400:
             return results
+
+    filtered_events = filter_events(artists, response)
+    if filtered_events:
+        formatted_events = format_batch_events(filtered_events)
+        results.extend(formatted_events)
+        return results
 
 
 def filter_events(artists, response):
@@ -95,9 +97,6 @@ def format_batch_events(filtered_events):
         iso_ends_at = event['end']['utc']
         if not event['logo']:
             continue
-
-        print('\n\n\nEVENT INFO')
-        print(event)
 
         # https://stackoverflow.com/questions/4770297/convert-utc-datetime-string-to-local-datetime-with-python
         # https://docs.python.org/2/library/datetime.html

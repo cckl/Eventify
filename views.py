@@ -188,10 +188,8 @@ def process_event_search():
     results = eventbrite.search_batch_events(artists, city, distance)
 
     # TODO: check for valid location input
-    if results == 'location invalid':
-        flash('You entered an invalid location. Please try your search again.')
-        return redirect('/event-search')
-    elif results:
+    print(results)
+    if results:
         helper.add_events_db(results)
         helper.add_user_event_link(results)
         return jsonify(results)
