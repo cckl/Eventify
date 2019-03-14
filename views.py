@@ -20,8 +20,6 @@ def login_required(f):
         if 'logged_in' in session:
             return f(*args, **kwargs)
         else:
-            flash('Hi. Please login or register 👋')
-            print(session)
             return redirect(url_for('show_homepage'))
     return wrap
 
@@ -43,8 +41,6 @@ def spotify_login_required(f):
             print(session)
             return f(*args, **kwargs)
         else:
-            flash('Hi. Please login to Spotify 🎧')
-            print(session)
             return redirect(url_for('get_top_40'))
     return wrap
 
@@ -54,6 +50,7 @@ def spotify_login_required(f):
 def show_homepage():
     """Display homepage."""
 
+    session.clear()
     return render_template("homepage.html")
 
 
@@ -78,13 +75,10 @@ def process_login():
         if password == user.password:
             session['user'] = username
             session['logged_in'] = True
-            flash('Successfully logged in 😸')
             return redirect('/top-40')
         else:
-            flash('Sorry, that username or password isn\'t correct 😧 Try again.')
             return render_template("login.html")
     else:
-        flash('Sorry, that username or password isn\'t correct 😧 Try again.')
         return render_template("login.html")
 
 
@@ -105,7 +99,6 @@ def process_registration():
 
     # checks to ensure a unique username account is being added
     if User.query.filter_by(username=username).first():
-        flash('Sorry, an account with that username already exists ☹️')
         return render_template("register.html")
     else:
         helper.add_user_db(username, password)
@@ -113,7 +106,6 @@ def process_registration():
         # creates a user session
         session['user'] = username
         session['logged_in'] = True
-        flash('Successfully created an account. 🐙')
         return redirect('/get-top-40')
 
 
@@ -131,6 +123,7 @@ def logout():
 def get_top_40():
     """Display Spotify login."""
 
+    print(session)
     spotify_auth_url = spotify.get_auth_url()
     return render_template("get-top-40.html", spotify_auth_url=spotify_auth_url)
 
@@ -145,7 +138,6 @@ def authorize_spotify():
     session['refresh_token'] = response['refresh_token']
     session['spotify_logged_in'] = True
 
-    flash("Succesfully logged into Spotify! 👾")
     return redirect("/top-40")
 
 
