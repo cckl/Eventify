@@ -14,7 +14,7 @@
           <img class="user-img" src="https://eventify.sfo2.digitaloceanspaces.com/blush.jpg" alt="Default display image">
         {% endif %}
         <h2>
-          Hey, <a href="{{ user['external_urls']['spotify'] }}" target="_blank">{{ user['display_name']}}</a>!
+          Hey, <a class="blue" href="{{ user['external_urls']['spotify'] }}" target="_blank">{{ user['display_name']}}</a>!
         </h2>
       </div>
 
@@ -23,7 +23,7 @@
     <div class="col-9 py-2em">
       <div class="text-white">
         <h1 class="text-underline"><b>Your Heavy Rotation<b></h1>
-        <p>Top 40 Spotify artists in the last 6 months</p>
+        <h5>Your top 40 Spotify artists in the last 6 months</h5>
       </div>
 
         <!-- unpack artist data -->
@@ -34,7 +34,7 @@
               <img class="artist-img" src="{{ img }}" alt="Spotify profile image of {{ artist }}">
             </div>
             <span>{{ index }}.</span>
-            <span> <a href="{{ url}}" target="_blank">{{ artist }}</a></span>
+            <span> <a class="blue" href="{{ url}}" target="_blank">{{ artist }}</a></span>
           </div>
           {% endfor %}
         </div>
@@ -43,7 +43,7 @@
   </div>
 </div>
 
-<div class="container-fluid text-center px-6 py-2em" id="orange-bg-wide">
+<div class="container-fluid text-center px-6 py-2em" id="orange-bg-wide" name="search">
 
   <div id="event-search-area">
     <div class="row">
@@ -54,24 +54,25 @@
         <div id="search-area">
           <!-- <h3>Choose your city and distance</h3> -->
           <form id="event-search">
-            <div>
+            <div class="form-group display-inline">
               <h4 class="display-inline">I'm looking for shows in... </h4>
-              <input class="mx-2" type="text" name="city" id="city" value="Enter a city name">
-
+              <input class="form-control-2 mx-2" type="text" name="city" id="city" placeholder="Enter a city name" required>
+            </div>
+            <div class="form-group display-inline">
               Within:
-                <select name="distance" id="distance">
+                <select class="form-control width-6 mx-1" name="distance" id="distance">
                   <option value="5mi">5 miles</option>
                   <option value="10mi">10 miles</option>
                   <option value="25mi">25 miles</option>
                   <option value="50mi">50 miles</option>
                 </select>
                 <input type="submit" class="btn btn-primary my-2 mx-2">
-                <a href="#" id="search-again" class="btn btn-primary my-2 mx-2" style="display: none">Try another search</a>
-              </div>
+                <a href="#search" id="search-again" class="btn btn-primary my-2 mx-2" style="display: none">Try another search</a>
+            </div>
           </form>
 
           <div id="loading-icons" class="text-center">
-            <p class="py-2">Loading events...</p>
+            <p class="pt-3">Loading events...</p>
             <div id="loading" class="mx-auto"></div>
             <div id="loading2" class="mx-auto"></div>
           </div>
@@ -105,7 +106,7 @@
       <div id="event-header" class="text-center"></div>
       <div id="event-results" class="d-inline-flex flex-wrap justify-content-center">
         <div id="none-found" style="display:none">
-          <h4>Sorry, no events near you were found :(</h4>
+          <h4>Sorry, no events in that city were found 😥 Try another search?</h4>
         </div>
       </div>
 
