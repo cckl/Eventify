@@ -77,10 +77,7 @@ def filter_events(artists, response):
         for artist in artists:
             name = artist[1].lower()
             title = match['name']['text'].lower()
-            # use regex to accurately check for name match in title
             if re.search(r'\b{}(?!\w|[?\'.,!])\b'.format(name), title):
-                initial_events.append(match)
-            if name.lower() in match['name']['text'].lower():
                 initial_events.append(match)
 
     filtered_events = [event for i, event in enumerate(initial_events) if event not in initial_events[i+1:]]
@@ -121,5 +118,4 @@ def format_batch_events(filtered_events):
 # use JS to fetch this information (preferred)
 # fetch what browser preferences are and render on the frontend
 # can also get this information from city, see if external api or library has this infomration
-
 # set user preference on backend
