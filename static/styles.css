@@ -83,7 +83,7 @@ h1, h2, h3 {
   font: 700 6vw 'Cabin', sans-serif;
   position: relative;
   text-align: center;
-  margin-top: 2.5em;
+  margin-top: 3.5em;
   margin-bottom: 2em;
   color: white;
   letter-spacing: -0.02em;
@@ -291,6 +291,10 @@ h2 {
 
 #event-results {
   min-width: 100%;
+}
+
+#recommended-evts {
+  margin-left: 13.3em;
 }
 
 .event-div {

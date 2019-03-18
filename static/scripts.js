@@ -73,9 +73,15 @@ $('#event-search').on('submit', (evt) => {
   $('input[type=submit]').hide();
 });
 
+$('#event-search').on('submit', (evt) => {
+  console.log($('#recommended-evts').is(':checked'))
+  if ($('#recommended-evts').is(':checked')) {
+    console.log('CHECKED')
+  }
+})
 
 // event search with recommended events
-$('#recommended').on('submit', (evt) => {
+$('#event-search').on('submit', (evt) => {
   evt.preventDefault();
   $('#none-found').hide();
 
@@ -84,38 +90,40 @@ $('#recommended').on('submit', (evt) => {
     'distance': $('#distance').val()
   };
 
-  $.post('/recommended', formInputs, (results) => {
-    console.log(results)
-    if (results) {
-      // $('#event-results').append('<h2>You might like</h2>')
-      for (let result of results) {
-        formattedDate = formatDate(result['starts_at'])
-        $('#event-results').append(`
-          <div class="event-div" id="orange-bg">
-              <div class="rect-img img-fluid">
-                <img class="event-img" src="${result['img']}">
-              </div>
-              <div class="event-text">
-                <div class="row">
-                  <div class="col-3 text-center">
-                    <p>${formattedDate[1]}</p>
-                    <h2>${formattedDate[2]}</h2>
-                  </div>
-                  <div class="col-9">
-                    <h4>${result['name']}</h4>
-                    <p>${result['venue']}</p>
-                    <a class="btn btn-info" href="${result['url']}" target="_blank">RSVP on Eventbrite</a>
+  if ($('#recommended-evts').is(':checked')) {
+    console.log('CHECKED')
+    $.post('/recommended', formInputs, (results) => {
+      console.log(results)
+      if (results) {
+        // $('#event-results').append('<h2>You might like</h2>')
+        for (let result of results) {
+          formattedDate = formatDate(result['starts_at'])
+          $('#event-results').append(`
+            <div class="event-div" id="yellow-bg">
+                <div class="rect-img img-fluid">
+                  <img class="event-img" src="${result['img']}">
+                </div>
+                <div class="event-text">
+                  <div class="row">
+                    <div class="col-3 text-center">
+                      <p>${formattedDate[1]}</p>
+                      <h2>${formattedDate[2]}</h2>
+                    </div>
+                    <div class="col-9">
+                      <h4>${result['name']}</h4>
+                      <p>${result['venue']}</p>
+                      <a class="btn btn-info" href="${result['url']}" target="_blank">RSVP on Eventbrite</a>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          `)
+            `)
+        }
+      } else {
+        $('#none-found').show()
       }
-    } else {
-      $('#none-found').show()
-    }
-  });
-  $('input[type=submit]').hide();
+    });
+  }
 });
 
 
