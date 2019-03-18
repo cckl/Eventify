@@ -233,6 +233,10 @@ h2 {
   background: linear-gradient(175deg, rgb(158, 90, 234) 250px,#fff 0);
 }
 
+#purple-solid-bg {
+  background: rgb(158, 90, 234);
+}
+
 #orange-bg-wide {
   background: linear-gradient(184deg, rgb(240, 183, 124) 250px,#fff 0);
 }
@@ -332,6 +336,10 @@ p {
   padding-bottom: 2em!important;
 }
 
+.pt-1em {
+  padding-top: 1em;
+}
+
 .pt-2em {
   padding-top: 2em;
 }
@@ -354,6 +362,10 @@ p {
 
 .small-mb {
   margin-bottom: 0.5em;
+}
+
+.mb-0 {
+  margin-bottom: 0;
 }
 
 .pr-0 {

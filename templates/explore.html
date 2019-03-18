@@ -5,6 +5,15 @@
 {% block content %}
 
 <div class="container-fluid text-center px-6">
+  <div class="row" id="purple-solid-bg">
+    <div class="col-3">
+
+    </div>
+    <div class="col-9">
+      <h1 class="text-white text-underline pt-1em">What's Playing🎧</h1>
+      <h5 class="text-white mb-0">See what other users in the Eventify community are listening to</h5>
+    </div>
+  </div>
   {% for user in users %}
     <div class="row" id="purple-bg">
       <div class="col-3 py-2em pl-2em pr-0">
@@ -14,19 +23,19 @@
         {% else %}
           <img class="user-img" src="https://eventify.sfo2.digitaloceanspaces.com/blush.jpg" alt="Default display image">
         {% endif %}
-          <h2><a href="{{ user[1] }}">{{ user[0] }}</a></h2>
+          <h2><a href="{{ user[1] }}" class="blue">{{ user[0] }}</a></h2>
         </div>
       </div>
 
       <div class="col-9 py-2em text-center">
-        <h1 class="text-white text-underline">What's Playing 🎧</h1>
-        <div class="artists-div d-flex flex-wrap justify-content-center pt-2em">
+
+        <div class="artists-div d-flex flex-wrap justify-content-center">
         {% for artist in artists[user[0]] %}
           <div class="small-artist-div">
             <div class="small-round-img">
               <img class="artist-img" src="{{ artist[2] }}" alt="Spotify profile image of {{ artist[0] }}">
             </div>
-            <span><a class="font-smaller" href="{{ artist[1] }}" target="_blank">{{ artist[0] }}</a></span>
+            <span><a class="font-smaller blue" href="{{ artist[1] }}" target="_blank">{{ artist[0] }}</a></span>
           </div>
         {% endfor %}
       </div>
