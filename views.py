@@ -152,14 +152,6 @@ def show_top_40():
     artists = spotify.get_top_artists(access_token)
     username = session['user']
 
-    # after classes encapsulate instantiation, can create function "add user"
-    # should extract the user/artist creation process to another filter_events
-    # 'if': can this be extracted
-
-    # pull out user from db and keep the object saved to variable
-    # otherwise constantly querying db for user object
-
-    # session is best kept at the view level -- might backfire in testing
     if helper.check_spotify_not_in_db(username):
         helper.add_user_spotify_db(access_token)
         helper.add_artist_db(access_token)
@@ -179,8 +171,6 @@ def process_event_search():
     artists = spotify.get_top_artists(access_token)
     results = eventbrite.search_batch_events(artists, city, distance)
 
-    # TODO: check for valid location input
-    print(results)
     if results:
         helper.add_events_db(results)
         helper.add_user_event_link(results)
@@ -220,5 +210,7 @@ def explore():
             for artist in user.artists:
                 user_artists.append((artist.name, artist.spotify_url, artist.img))
             users_artists[user.username] = user_artists
+
+    print(users)
 
     return render_template("explore.html", users=users, artists=users_artists)

@@ -18,15 +18,14 @@ SPOTIFY_RELATED_ARTISTS_ENDPOINT ='https://api.spotify.com/v1/artists'
 def get_auth_url():
     """Return Spotify authorization URL."""
 
+
     payload = {
         'client_id': SPOTIFY_CLIENT_ID,
         'response_type': 'code',
         'redirect_uri': SPOTIFY_REDIRECT_URI,
         'scope': 'user-library-read user-top-read user-read-private'
     }
-    # https://christophergs.github.io/python/2016/12/03/python-urllib-parse/
-    # https://github.com/yspark90/UniMuse/blob/master/UniMuse/spotify.py
-    # url_args = '&'.join([f"{key}={urllib.parse.quote(val)}" for key, val in query_params.items()])
+
     url_args = urllib.parse.urlencode(payload)
     auth_url = f"{SPOTIFY_AUTHORIZATION_URL}/?{url_args}"
     return auth_url
@@ -34,6 +33,7 @@ def get_auth_url():
 
 def get_access_token(request):
     """Return Spotify access token."""
+
 
     auth_code = request.args.get('code')
 
@@ -43,14 +43,9 @@ def get_access_token(request):
         'redirect_uri': SPOTIFY_REDIRECT_URI
     }
 
-    # https://github.com/yspark90/UniMuse/blob/master/UniMuse/spotify.py
-    # https://docs.python.org/2/library/base64.html
     client_encoded_str = base64.b64encode(f"{SPOTIFY_CLIENT_ID}:{SPOTIFY_CLIENT_SECRET}".encode('ascii'))
     auth_header = {"Authorization": f"Basic {client_encoded_str.decode('ascii')}"}
 
-    # http://flask.pocoo.org/docs/1.0/reqcontext/
-    # http://docs.python-requests.org/en/master/user/quickstart/
-    # https://www.pluralsight.com/guides/web-scraping-with-request-python
     response = requests.post(SPOTIFY_TOKEN_ENDPOINT, data=payload, headers=auth_header)
     print(response.json())
     return response.json()
@@ -58,6 +53,7 @@ def get_access_token(request):
 
 def refresh_token():
     """Return new Spotify access token in exchange for referesh token."""
+
 
     refresh_payload = {
         'grant_type': 'refresh_token',
@@ -77,10 +73,10 @@ def refresh_token():
 def get_top_artists(access_token):
     """Return a user's top 40 Spotify artists."""
 
-    # https://www.dataquest.io/blog/python-api-tutorial/
+
     payload = {
         'time_range': 'medium_term',
-        'limit': '10'
+        'limit': '40'
     }
 
     url_args = urllib.parse.urlencode(payload)
@@ -102,23 +98,17 @@ def get_top_artists(access_token):
 def format_artist_data(response):
     """Return a list of formatted artist data in tuples: index, name, url, image, and id."""
 
+
     artists = [(index, item['name'], item['external_urls']['spotify'], item['images'][2]['url'], item['id'])
                 for index, item in enumerate(response['items'], 1)]
     return artists
 
 
-# def get_artist_ids(top_artists):
-#     """Get IDs of top 40 Spotify artists."""
-#
-#     artist_ids = [(artist[1], artist[4]) for artist in top_artists]
-#     return artist_ids
-
-
 def get_related_artists(access_token):
     """Return a list of related artists to top 40 Spotify artists in tuples: name, id."""
 
+
     top_artists = get_top_artists(access_token)
-    # artist_ids = get_artist_ids(top_artists)
 
     related_artists = []
 
@@ -144,17 +134,20 @@ def get_related_artists(access_token):
 def filter_related_artists(response):
     """Return a list of 5 related artists with tuple-formatted name, id."""
 
+
     filtered_artists = []
 
     for i in range(0, 5):
-        artist = response['artists'][i]
-        filtered_artists.append((artist['id'], artist['name']))
+        if response['artists']:
+            artist = response['artists'][i]
+            filtered_artists.append((artist['id'], artist['name']))
 
     return filtered_artists
 
 
 def get_user_profile(access_token):
     """Return Spotify profile information about the current user."""
+
 
     auth_header = {"Authorization": f"Bearer {access_token}"}
     response = requests.get(SPOTIFY_USER_ENDPOINT, headers=auth_header)

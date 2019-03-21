@@ -18,7 +18,7 @@ def add_user_db(username, password):
 
 
 def check_spotify_not_in_db(username):
-    """Verifies that a user's Spotify data is not in the users table."""
+    """Verifies that a user's Spotify data is not already in the users table."""
 
     current_user = User.query.filter_by(username=username).first()
     user_id = current_user.user_id
@@ -27,17 +27,18 @@ def check_spotify_not_in_db(username):
 
 
 def add_user_spotify_db(access_token):
-    """Add user info to users table after Spotify login."""
+    """Adds user info to users table after Spotify login."""
 
     # get user data from spotify response.json()
     user_data = spotify.get_user_profile(access_token)
     user_spotify_url = user_data['external_urls']['spotify']
-    user_img = user_data['images'][0]['url']
+    if user_data['images']:
+        user_img = user_data['images'][0]['url']
 
-    # get user in db to update values
     user = User.query.filter_by(username=session['user']).first()
     user.spotify_url = user_spotify_url
-    user.img = user_img
+    if user_data['images']:
+        user.img = user_img
 
     db.session.commit()
 
@@ -46,8 +47,7 @@ def add_artist_db(access_token):
     """Add artist info to artists table after Spotify login."""
 
     # get artist info from spotify response.json()
-    response = spotify.get_top_artists(access_token)
-    artists = spotify.format_artist_data(response)
+    artists = spotify.get_top_artists(access_token)
 
     for artist in artists:
         artist_name = artist[1]
@@ -73,8 +73,7 @@ def add_user_artist_link(access_token):
     current_user_id = User.query.filter_by(username=username).first().user_id
 
     # get list of artist info from spotify response.json()
-    response = spotify.get_top_artists(access_token)
-    artists = spotify.format_artist_data(response)
+    artists = spotify.get_top_artists(access_token)
 
     for artist in artists:
         name = artist[1]

@@ -4,7 +4,6 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-
 ########################################
 # Model definitions
 
@@ -19,7 +18,6 @@ class User(db.Model):
     spotify_url = db.Column(db.String(200))
     img = db.Column(db.String(200))
 
-    # https://www.michaelcho.me/article/many-to-many-relationships-in-sqlalchemy-models-flask
     artists = db.relationship('Artist', secondary='users_artists_link')
     events = db.relationship('Event', secondary='users_events_link')
 
@@ -31,6 +29,7 @@ class User(db.Model):
 
 class Artist(db.Model):
     """Artist from Spotify."""
+
 
     __tablename__ = 'artists'
 
@@ -50,8 +49,7 @@ class Artist(db.Model):
 class UserArtistLink(db.Model):
     """Users' top artists from Spotify."""
 
-    # https://www.michaelcho.me/article/many-to-many-relationships-in-sqlalchemy-models-flask
-    # https://www.pythoncentral.io/sqlalchemy-association-tables/
+
     __tablename__ = 'users_artists_link'
 
     users_artists_link_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
@@ -70,6 +68,7 @@ class UserArtistLink(db.Model):
 
 class Event(db.Model):
     """Event from Eventbrite."""
+
 
     __tablename__ = 'events'
 
@@ -93,6 +92,7 @@ class Event(db.Model):
 class UserEventLink(db.Model):
     """Users' liked events from Eventbrite."""
 
+
     __tablename__ = 'users_events_link'
 
     users_events_link_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
@@ -109,7 +109,7 @@ class UserEventLink(db.Model):
         return f"<UserLikedEvent: like_id={self.users_events_link_id},  user_id={self.user_id}, event_id={self.event_id}>"
 
 
-#####################################################################
+########################################
 # Helper functions
 
 def connect_to_db(app, db_uri='postgresql:///appdb'):
@@ -121,7 +121,7 @@ def connect_to_db(app, db_uri='postgresql:///appdb'):
     db.init_app(app)
 
 
-#####################################################################
+########################################
 # Example testdb data
 
 def test_data():
