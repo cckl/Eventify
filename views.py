@@ -7,10 +7,10 @@ from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import StrictUndefined
 
 from app import app
-import eventbrite
-import helper
 from model import User, Artist, Event, UserArtistLink, UserEventLink
 from model import connect_to_db, db
+import eventbrite
+import helper
 import spotify
 
 
@@ -50,7 +50,6 @@ def spotify_login_required(f):
 def show_homepage():
     """Display homepage."""
 
-    session.clear()
     return render_template("homepage.html")
 
 
@@ -123,8 +122,8 @@ def logout():
 def get_top_40():
     """Display Spotify login."""
 
-    print(session)
     spotify_auth_url = spotify.get_auth_url()
+
     return render_template("get-top-40.html", spotify_auth_url=spotify_auth_url)
 
 
@@ -162,7 +161,7 @@ def show_top_40():
 
 @app.route('/event-search', methods=['POST'])
 def process_event_search():
-    """Return event search results from the Eventbrite API."""
+    """Return event search results from Eventbrite."""
 
     city = request.form.get('city')
     distance = request.form.get('distance')
@@ -181,7 +180,7 @@ def process_event_search():
 
 @app.route('/recommended', methods=['POST'])
 def search_recommended_events():
-    """Return recommended event search results from the Eventbrite API using Spotify related artists."""
+    """Return recommended event search results from Eventbrite using Spotify related artists."""
 
     city = request.form.get('city')
     distance = request.form.get('distance')
@@ -210,7 +209,5 @@ def explore():
             for artist in user.artists:
                 user_artists.append((artist.name, artist.spotify_url, artist.img))
             users_artists[user.username] = user_artists
-
-    print(users)
 
     return render_template("explore.html", users=users, artists=users_artists)
