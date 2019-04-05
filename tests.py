@@ -20,6 +20,8 @@ import spotify
 # test structure
 # mimicking file structure of application (views_test.py)
 
+# https://requests-mock.readthedocs.io/en/latest/
+
 class UserTest(unittest.TestCase):
     """Tests for user actions."""
 
@@ -50,6 +52,40 @@ class UserTest(unittest.TestCase):
     def tearDown(self):
         db.session.close()
         db.drop_all()
+
+
+class SpotifyTests(unittest.TestCase):
+    """Tests Spotify login and authentication with user logged in."""
+
+    def setUp(self):
+        self.client = app.test_client()
+        app.config['TESTING'] = True
+
+        with self.client as c:
+            with c.session_transaction() as session:
+                session['user'] = 'user1'
+                # TODO: Add Spotify session context when i can't access user login page?
+                # could use a dummy test token, but then also have to use dummy response data with the artists, etc. need all of this so my app runs!
+                # see if spotify provides test users
+                # write so test takes in argv, and can use my own token on command line
+                # for artist data, can use setup func to get actual data from spotify
+                # response = spotify.get_access_token(request)
+                # session['spotify_token'] = response['access_token']
+                # create contrived data for test cases i want from a textfile
+                # mock the data for now
+
+    def test_valid_auth_url(self):
+        auth_url = spotify.get_auth_url()
+        self.assertIn('user-top-read', auth_url)
+        self.assertIn(SPOTIFY_CLIENT_ID, auth_url)
+
+    def test_top40_spotify_logged_out(self):
+        response = self.client.get('/top-40', follow_redirects=True)
+        self.assertIn(b"Please login to Spotify", response.data)
+
+    def test_top40_spotify_logged_in(self):
+        response = self.client.get('/top-40', follow_redirects=True)
+        self.assertIn(b"Welcome", response.data)
 
 
 class ViewTestsLoggedIn(unittest.TestCase):
