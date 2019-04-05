@@ -8,18 +8,6 @@ from views import app
 import spotify
 
 # http://flask.pocoo.org/docs/1.0/testing/
-# test functionality of code and verify code is working as expected
-# test cases
-
-# view tests
-# one test per view is good practice: handle success and fail
-
-# setUp and tearDown: use for setup and cleanup while testing
-# esp when testing database, need to seed and clear data
-
-# test structure
-# mimicking file structure of application (views_test.py)
-
 # https://requests-mock.readthedocs.io/en/latest/
 
 class UserTest(unittest.TestCase):
@@ -64,15 +52,6 @@ class SpotifyTests(unittest.TestCase):
         with self.client as c:
             with c.session_transaction() as session:
                 session['user'] = 'user1'
-                # TODO: Add Spotify session context when i can't access user login page?
-                # could use a dummy test token, but then also have to use dummy response data with the artists, etc. need all of this so my app runs!
-                # see if spotify provides test users
-                # write so test takes in argv, and can use my own token on command line
-                # for artist data, can use setup func to get actual data from spotify
-                # response = spotify.get_access_token(request)
-                # session['spotify_token'] = response['access_token']
-                # create contrived data for test cases i want from a textfile
-                # mock the data for now
 
     def test_valid_auth_url(self):
         auth_url = spotify.get_auth_url()
