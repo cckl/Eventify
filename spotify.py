@@ -2,11 +2,11 @@
 
 import os
 import base64
+from flask import session
 import urllib
 import requests
 
 from config import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REDIRECT_URI
-from flask import session
 
 SPOTIFY_AUTHORIZATION_URL='https://accounts.spotify.com/authorize'
 SPOTIFY_TOKEN_ENDPOINT='https://accounts.spotify.com/api/token'
@@ -47,7 +47,6 @@ def get_access_token(request):
     auth_header = {"Authorization": f"Basic {client_encoded_str.decode('ascii')}"}
 
     response = requests.post(SPOTIFY_TOKEN_ENDPOINT, data=payload, headers=auth_header)
-    print(response.json())
     return response.json()
 
 
@@ -99,8 +98,11 @@ def format_artist_data(response):
     """Return a list of formatted artist data in tuples: index, name, url, image, and id."""
 
 
-    artists = [(index, item['name'], item['external_urls']['spotify'], item['images'][2]['url'], item['id'])
-                for index, item in enumerate(response['items'], 1)]
+    artists = []
+
+    for index, item in enumerate(response['items'], 1):
+        artists.append((index, item['name'], item['external_urls']['spotify'], item['images'][2]['url'], item['id']))
+
     return artists
 
 

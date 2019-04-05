@@ -30,7 +30,6 @@ def search_batch_events(artists, city, distance):
         }
         url_args = urllib.parse.urlencode(query_params)
         url = f"/events/search?{url_args}"
-        print(url)
         req = {'method': 'GET', 'relative_url': url}
         req_payload.append(req)
 
@@ -66,6 +65,7 @@ def filter_events(artists, response):
 
     initial_matches = []
     initial_events = []
+    filtered_events = []
 
     for r in response:
         decoded_events = json.loads(r['body'])
@@ -80,7 +80,9 @@ def filter_events(artists, response):
             if re.search(r'\b{}(?!\w|[?\'.,!])\b'.format(name), title):
                 initial_events.append(match)
 
-    filtered_events = [event for i, event in enumerate(initial_events) if event not in initial_events[i+1:]]
+    for i, event in enumerate(initial_events):
+        if event not in initial_events[i+1:]:
+            filtered_events.append(event)
 
     return filtered_events
 
@@ -94,11 +96,10 @@ def format_batch_events(filtered_events):
         address = f"{event['venue']['address']['address_1']}, {event['venue']['address']['city']}, {event['venue']['address']['region']}, {event['venue']['address']['postal_code']}"
         iso_starts_at = event['start']['utc']
         iso_ends_at = event['end']['utc']
+
         if not event['logo']:
             continue
 
-        # https://stackoverflow.com/questions/4770297/convert-utc-datetime-string-to-local-datetime-with-python
-        # https://docs.python.org/2/library/datetime.html
         formatted_event = {
             'name': event['name']['text'],
             'description': event['description']['text'],
@@ -109,13 +110,7 @@ def format_batch_events(filtered_events):
             'url': event['url'],
             'img': event['logo']['original']['url']
             }
+
         formatted_events.append(formatted_event)
 
     return formatted_events
-
-# doing local time
-# first, need to know user's preferred timezone
-# use JS to fetch this information (preferred)
-# fetch what browser preferences are and render on the frontend
-# can also get this information from city, see if external api or library has this infomration
-# set user preference on backend
