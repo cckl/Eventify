@@ -10,7 +10,7 @@ from app import app
 from model import User, Artist, Event, UserArtistLink, UserEventLink
 from model import connect_to_db, db
 import eventbrite
-import helper
+import db_helper
 import spotify
 
 
@@ -100,7 +100,7 @@ def process_registration():
     if User.query.filter_by(username=username).first():
         return render_template("register.html")
     else:
-        helper.add_user_db(username, password)
+        db_helper.add_user_db(username, password)
 
         # creates a user session
         session['user'] = username
@@ -151,10 +151,10 @@ def show_top_40():
     artists = spotify.get_top_artists(access_token)
     username = session['user']
 
-    if helper.check_spotify_not_in_db(username):
-        helper.add_user_spotify_db(access_token)
-        helper.add_artist_db(access_token)
-        helper.add_user_artist_link(access_token)
+    if db_helper.check_spotify_not_in_db(username):
+        db_helper.add_user_spotify_db(access_token)
+        db_helper.add_artist_db(access_token)
+        db_helper.add_user_artist_link(access_token)
 
     return render_template("top-40.html", artists=artists, user=user_data)
 
@@ -171,8 +171,8 @@ def process_event_search():
     results = eventbrite.search_batch_events(artists, city, distance)
 
     if results:
-        helper.add_events_db(results)
-        helper.add_user_event_link(results)
+        db_helper.add_events_db(results)
+        db_helper.add_user_event_link(results)
         return jsonify(results)
     else:
         return jsonify(results)
