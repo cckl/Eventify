@@ -51,7 +51,7 @@ def get_access_token(request):
 
 
 def refresh_token():
-    """Return new Spotify access token in exchange for referesh token."""
+    """Return new Spotify access token in exchange for ref  resh token."""
 
 
     refresh_payload = {

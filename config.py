@@ -6,7 +6,7 @@ FLASK_APP_KEY=os.environ['FLASK_APP_KEY']
 # Spotify client info and URI
 SPOTIFY_CLIENT_ID=os.environ['SPOTIFY_CLIENT_ID']
 SPOTIFY_CLIENT_SECRET=os.environ['SPOTIFY_CLIENT_SECRET']
-SPOTIFY_REDIRECT_URI='http://localhost:5000/spotify-auth'
+SPOTIFY_REDIRECT_URI='http://54.70.215.219/spotify-auth'
 
 ########################################
 # Eventbrite client info and URLs
