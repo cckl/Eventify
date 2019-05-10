@@ -1,5 +1,5 @@
 [Unit]
-Description=My Awesome Cat App
+Description=Eventify
 After=network.target
 
 [Service]
